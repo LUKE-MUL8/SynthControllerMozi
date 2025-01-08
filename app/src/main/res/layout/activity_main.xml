@@ -5,45 +5,37 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/frequency_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Frequency: 440 Hz"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <SeekBar
-        android:id="@+id/frequency_slider"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:max="1980"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frequency_label" />
-
     <Button
         android:id="@+id/connect_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="464dp"
+        android:layout_marginEnd="112dp"
+        android:layout_marginBottom="152dp"
         android:text="Connect to Bluetooth"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frequency_slider" />
+        app:layout_constraintTop_toBottomOf="@+id/rotaryKnob" />
 
     <com.rejowan.rotaryknob.RotaryKnob
         android:id="@+id/rotaryKnob"
-        android:layout_width="201dp"
-        android:layout_height="248dp"
-        android:layout_marginBottom="225dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="210dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="242dp"
+        android:layout_marginBottom="79dp"
+        app:current_progress="0"
+        app:label_text="Modulation Index"
+        app:label_text_color="#FFFFFF"
+        app:label_text_size="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/connect_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frequency_slider" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:max="255"
+        app:min="0"
+        app:progress_text_color="#FFFFFF"
+        app:progress_text_size="18sp"
+        app:show_label="true"
+        app:show_progress_text="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
