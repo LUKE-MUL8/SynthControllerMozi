@@ -1,7 +1,7 @@
 Sound Synthesis with Arduino and Mozzi Library.
 
 
-This project demonstrates FM synthesis using the Mozzi library on an Arduino. It features real-time Bluetooth control of the modulation index, automatic MIDI note transitions, and smooth frequency modulation for rich, evolving sound.
+This project demonstrates FM + ASDR sine,saw,square synthesis using the Mozzi library on an Arduino. It features real-time Bluetooth control of the modulation index, automatic MIDI note transitions, and smooth frequency modulation for rich, evolving sound.
 
 Features
 FM synthesis(so far) with carrier and modulator oscillators.
