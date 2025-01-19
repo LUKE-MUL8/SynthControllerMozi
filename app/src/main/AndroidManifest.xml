@@ -20,12 +20,12 @@
         android:theme="@style/Theme.SynthController"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity2"
+            android:exported="false"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true"
-            android:configChanges="orientation|screenSize"
             android:screenOrientation="sensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

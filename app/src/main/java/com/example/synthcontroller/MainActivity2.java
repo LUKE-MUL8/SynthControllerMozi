@@ -220,7 +220,6 @@ public class MainActivity2 extends AppCompatActivity {
         }
     }
 
-
     private void adjustPianoSizeBasedOnOrientation() {
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) pianoView.getLayoutParams();
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
