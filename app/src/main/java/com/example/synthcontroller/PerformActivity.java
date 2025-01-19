@@ -27,7 +27,7 @@ import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
-public class MainActivity2 extends AppCompatActivity {
+public class PerformActivity extends AppCompatActivity {
 
     private PianoView pianoView;
     private BluetoothSocket bluetoothSocket;

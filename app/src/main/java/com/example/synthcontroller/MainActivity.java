@@ -4,16 +4,12 @@ import com.rejowan.rotaryknob.RotaryKnob;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     private final String DEVICE_NAME = "HC-02"; // Bluetooth module name
     private final UUID UUID_SERIAL_PORT = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private RotaryKnob rotaryKnob;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +48,25 @@ public class MainActivity extends AppCompatActivity {
         // Bluetooth connection button
         Button connectButton = findViewById(R.id.connect_button);
         connectButton.setOnClickListener(v -> connectToBluetooth());
+
+        // Find the button by its ID
+        Button navigateButton = findViewById(R.id.navigate_button);
+
+        // Check if the button was found
+        if (navigateButton == null) {
+            throw new RuntimeException("navigate_button not found in activity_main.xml");
+        }
+
+        // Set OnClickListener
+        navigateButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, PerformActivity.class);
+            startActivity(intent);
+        });
+
     }
+
+
+
 
     private void sendKnobValue(int progress) {
         if (btOutput != null) {

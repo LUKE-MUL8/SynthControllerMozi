@@ -20,7 +20,7 @@
         android:theme="@style/Theme.SynthController"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity2"
+            android:name=".PerformActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize" />
         <activity
