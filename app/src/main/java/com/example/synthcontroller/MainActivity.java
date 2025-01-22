@@ -27,27 +27,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Initialize RotaryKnob
-        rotaryKnob = findViewById(R.id.rotaryKnob);
-
-        // Set initial knob values (optional)
-        rotaryKnob.setMin(0);
-        rotaryKnob.setMax(255);
-        rotaryKnob.setCurrentProgress(0);
-
-        // Set listener for knob progress changes
-        rotaryKnob.setProgressChangeListener(new RotaryKnob.OnProgressChangeListener() {
-            @Override
-            public void onProgressChanged(int progress) {
-                // Send knob progress to Arduino
-                sendKnobValue(progress);
-            }
-        });
-
-        // Bluetooth connection button
-        Button connectButton = findViewById(R.id.connect_button);
-        connectButton.setOnClickListener(v -> connectToBluetooth());
+//
+//        // Initialize RotaryKnob
+//        rotaryKnob = findViewById(R.id.rotaryKnob);
+//
+//        // Set initial knob values (optional)
+//        rotaryKnob.setMin(0);
+//        rotaryKnob.setMax(255);
+//        rotaryKnob.setCurrentProgress(0);
+//
+//        // Set listener for knob progress changes
+//        rotaryKnob.setProgressChangeListener(new RotaryKnob.OnProgressChangeListener() {
+//            @Override
+//            public void onProgressChanged(int progress) {
+//                // Send knob progress to Arduino
+//                sendKnobValue(progress);
+//            }
+//        });
+//
+//        // Bluetooth connection button
+//        Button connectButton = findViewById(R.id.connect_button);
+//        connectButton.setOnClickListener(v -> connectToBluetooth());
 
         // Find the button by its ID
         Button navigateButton = findViewById(R.id.navigate_button);

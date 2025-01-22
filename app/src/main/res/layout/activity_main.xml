@@ -5,50 +5,48 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/connect_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="112dp"
-        android:layout_marginBottom="152dp"
-        android:text="Connect to Bluetooth"
+    <TextView
+        android:id="@+id/appTitle"
+        android:layout_width="353dp"
+        android:layout_height="93dp"
+        android:fontFamily="@font/assistant_extrabold"
+        android:text="Arduino Mozzi Controller"
+        android:textSize="34sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rotaryKnob" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.078" />
 
     <Button
         android:id="@+id/navigate_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/design_default_color_primary"
         android:text="Perform and change sound"
+        android:textColor="@color/design_default_color_on_primary"
+        android:textSize="18sp"
         app:icon="@drawable/baseline_piano_24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connect_button" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/midi_button"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <com.rejowan.rotaryknob.RotaryKnob
-        android:id="@+id/rotaryKnob"
-        android:layout_width="210dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="242dp"
-        android:layout_marginBottom="79dp"
-        app:current_progress="0"
-        app:label_text="Modulation Index"
-        app:label_text_color="#FFFFFF"
-        app:label_text_size="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/connect_button"
+    <Button
+        android:id="@+id/midi_button"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/design_default_color_primary"
+        android:text="Play MIDI"
+        android:textColor="@color/design_default_color_on_primary"
+        android:textSize="18sp"
+        app:icon="@drawable/baseline_queue_music_24"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:max="255"
-        app:min="0"
-        app:progress_text_color="#FFFFFF"
-        app:progress_text_size="18sp"
-        app:show_label="true"
-        app:show_progress_text="true" />
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/navigate_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
