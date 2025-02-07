@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 
 import com.convergencelabstfx.pianoview.PianoTouchListener;
 import com.convergencelabstfx.pianoview.PianoView;
+import com.rejowan.rotaryknob.RotaryKnob;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,6 +35,7 @@ public class PerformActivity extends AppCompatActivity {
     private OutputStream outputStream;
     private BluetoothDevice device;
     private BluetoothAdapter bluetoothAdapter;
+    private RotaryKnob attackKnob, decayKnob, sustainKnob, releaseKnob, filterKnob, detuneKnob;
 
     private static final UUID BT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static final String BT_DEVICE_NAME = "HC-02";
@@ -44,6 +46,52 @@ public class PerformActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        // Initialize knobs
+        RotaryKnob attackKnob = findViewById(R.id.attackKnob);
+        RotaryKnob decayKnob = findViewById(R.id.decayKnob);
+        RotaryKnob sustainKnob = findViewById(R.id.sustainKnob);
+        RotaryKnob releaseKnob = findViewById(R.id.releaseKnob);
+        RotaryKnob filterKnob = findViewById(R.id.filterKnob);
+        RotaryKnob detuneKnob = findViewById(R.id.detuneKnob);
+
+        // Set initial knob values (optional)
+        attackKnob.setMin(0);
+        attackKnob.setMax(255);
+        attackKnob.setCurrentProgress(0);
+
+        decayKnob.setMin(0);
+        decayKnob.setMax(255);
+        decayKnob.setCurrentProgress(0);
+
+        sustainKnob.setMin(0);
+        sustainKnob.setMax(255);
+        sustainKnob.setCurrentProgress(0);
+
+        releaseKnob.setMin(0);
+        releaseKnob.setMax(255);
+        releaseKnob.setCurrentProgress(0);
+
+        filterKnob.setMin(0);
+        filterKnob.setMax(255);
+        filterKnob.setCurrentProgress(0);
+
+        detuneKnob.setMin(0);
+        detuneKnob.setMax(255);
+        detuneKnob.setCurrentProgress(0);
+
+
+        // Set knob listeners
+        // Set listeners for knob progress changes
+        attackKnob.setProgressChangeListener(progress -> sendCommand("ATTACK", progress));
+        decayKnob.setProgressChangeListener(progress -> sendCommand("DECAY", progress));
+        sustainKnob.setProgressChangeListener(progress -> sendCommand("SUSTAIN", progress));
+        releaseKnob.setProgressChangeListener(progress -> sendCommand("RELEASE", progress));
+        filterKnob.setProgressChangeListener(progress -> sendCommand("FILTER", progress));
+        detuneKnob.setProgressChangeListener(progress -> sendCommand("DETUNE", progress));
+
+
+
+        // piano
         pianoView = findViewById(R.id.pianoView);
         adjustPianoSizeBasedOnOrientation();
 
@@ -60,19 +108,21 @@ public class PerformActivity extends AppCompatActivity {
 
             @Override
             public void onKeyClick(PianoView piano, int key) {
-//                sendCommand("CLICK", key);
+                // No action needed for key click
             }
         });
 
         checkAndRequestPermissions();
     }
 
+
+
+
+
     private void checkAndRequestPermissions() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            // Android 12+ permissions
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-                Log.d("PermissionDebug", "Bluetooth permissions not granted. Requesting for Android 12+...");
                 ActivityCompat.requestPermissions(this, new String[]{
                         Manifest.permission.BLUETOOTH_CONNECT,
                         Manifest.permission.BLUETOOTH_SCAN
@@ -81,31 +131,13 @@ public class PerformActivity extends AppCompatActivity {
                 enableBluetooth();
             }
         } else {
-            // Android 10 permissions
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.d("PermissionDebug", "Location permission not granted. Requesting for Android 10...");
                 ActivityCompat.requestPermissions(this, new String[]{
                         Manifest.permission.ACCESS_FINE_LOCATION
                 }, PERMISSION_REQUEST_CODE);
             } else {
                 enableBluetooth();
             }
-        }
-    }
-
-
-    private void handleBluetoothPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-
-            Log.d("PermissionDebug", "Bluetooth permissions not granted. Requesting...");
-            // Request Bluetooth permissions
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                    Manifest.permission.BLUETOOTH_SCAN
-            }, PERMISSION_REQUEST_CODE);
-        } else {
-            enableBluetooth();
         }
     }
 
@@ -116,6 +148,7 @@ public class PerformActivity extends AppCompatActivity {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     allPermissionsGranted = false;
+                    break;
                 }
             }
             if (allPermissionsGranted) {
@@ -128,95 +161,68 @@ public class PerformActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-
-
+    private void redirectToSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
+    }
 
     private void enableBluetooth() {
-        Log.d("BluetoothDebug", "Checking if Bluetooth is enabled");
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter == null) {
-            Log.d("BluetoothDebug", "This device doesn't support Bluetooth.");
             Toast.makeText(this, "Bluetooth is not supported on this device", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (!bluetoothAdapter.isEnabled()) {
-            Log.d("BluetoothDebug", "Bluetooth is disabled, requesting to enable...");
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 1);
         } else {
-            Log.d("BluetoothDebug", "Bluetooth is already enabled");
             findAndConnectDevice();
         }
     }
 
     private void findAndConnectDevice() {
-        Log.d("BluetoothDebug", "Searching for device: " + BT_DEVICE_NAME);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED ||
-                android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S) {
-
-            Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-            for (BluetoothDevice pairedDevice : pairedDevices) {
-                if (BT_DEVICE_NAME.equals(pairedDevice.getName())) {
-                    device = pairedDevice;
-                    break;
-                }
+        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+        for (BluetoothDevice pairedDevice : pairedDevices) {
+            if (BT_DEVICE_NAME.equals(pairedDevice.getName())) {
+                device = pairedDevice;
+                break;
             }
-
-            if (device == null) {
-                Log.d("BluetoothDebug", "Device not found in paired devices");
-                Toast.makeText(this, "Device not found. Please pair it first.", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            new Thread(() -> {
-                try {
-                    Log.d("BluetoothDebug", "Creating socket...");
-                    bluetoothSocket = device.createRfcommSocketToServiceRecord(BT_UUID);
-                    Log.d("BluetoothDebug", "Device: " + device.getName() + ", UUID: " + BT_UUID);
-
-                    bluetoothSocket.connect();
-                    Log.d("BluetoothDebug", "Connected successfully!");
-
-                    outputStream = bluetoothSocket.getOutputStream();
-                    runOnUiThread(() -> Toast.makeText(this, "Connected to " + BT_DEVICE_NAME, Toast.LENGTH_SHORT).show());
-                } catch (IOException e) {
-                    Log.e("BluetoothDebug", "Connection failed, trying fallback...", e);
-                    try {
-                        bluetoothSocket = (BluetoothSocket) device.getClass()
-                                .getMethod("createRfcommSocket", int.class)
-                                .invoke(device, 1);
-                        bluetoothSocket.connect();
-                        outputStream = bluetoothSocket.getOutputStream();
-                        runOnUiThread(() -> Toast.makeText(this, "Connected via fallback to " + BT_DEVICE_NAME, Toast.LENGTH_SHORT).show());
-                    } catch (Exception fallbackException) {
-                        Log.e("BluetoothDebug", "Fallback connection failed", fallbackException);
-                        runOnUiThread(() -> Toast.makeText(this, "Failed to connect", Toast.LENGTH_LONG).show());
-                    }
-                }
-            }).start();
-
-        } else {
-            Log.d("BluetoothDebug", "Missing required permissions");
-            Toast.makeText(this, "Permissions are not granted", Toast.LENGTH_SHORT).show();
         }
+
+        if (device == null) {
+            Toast.makeText(this, "Device not found. Please pair it first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        new Thread(() -> {
+            try {
+                bluetoothSocket = device.createRfcommSocketToServiceRecord(BT_UUID);
+                bluetoothSocket.connect();
+                outputStream = bluetoothSocket.getOutputStream();
+                runOnUiThread(() -> Toast.makeText(this, "Connected to " + BT_DEVICE_NAME, Toast.LENGTH_SHORT).show());
+            } catch (IOException e) {
+                Log.e("BluetoothDebug", "Connection failed", e);
+                runOnUiThread(() -> Toast.makeText(this, "Failed to connect", Toast.LENGTH_LONG).show());
+            }
+        }).start();
     }
 
-
-    private void sendCommand(String action, int key) {
+    private void sendCommand(String action, int value) {
         if (outputStream != null) {
             try {
-                String command = action + ":" + key + "\n";
+                String command = action + ":" + value + "\n"; // Format: "ACTION:VALUE"
                 outputStream.write(command.getBytes());
-                Log.d("BluetoothSend", "Command sent: " + command);
+                Log.d("BluetoothDebug", "Sent command: " + command); // Log the command
             } catch (IOException e) {
-                Log.e("BluetoothSend", "Failed to send command", e);
                 Toast.makeText(this, "Failed to send command", Toast.LENGTH_SHORT).show();
+                Log.e("BluetoothDebug", "Failed to send command", e); // Log the error
             }
         } else {
-            Log.w("BluetoothSend", "OutputStream is null");
+            Log.e("BluetoothDebug", "OutputStream is null"); // Log if outputStream is null
         }
     }
 
@@ -227,30 +233,8 @@ public class PerformActivity extends AppCompatActivity {
             params.height = ConstraintLayout.LayoutParams.MATCH_PARENT;
         } else {
             params.width = ConstraintLayout.LayoutParams.MATCH_PARENT;
-            params.height = getResources().getDisplayMetrics().heightPixels / 2;
+            params.height = 600;  // Adjust as necessary for portrait mode
         }
         pianoView.setLayoutParams(params);
-        pianoView.requestLayout();
-    }
-
-    private void redirectToSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.parse("package:" + getPackageName()));
-        startActivity(intent);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try {
-            if (outputStream != null) {
-                outputStream.close();
-            }
-            if (bluetoothSocket != null) {
-                bluetoothSocket.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
