@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,11 @@ public class PerformActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_perform);
+
+        //midi panic button
+        Button panicButton = findViewById(R.id.panicButton);
+        panicButton.setOnClickListener(v -> sendCommand("PANIC", 0));
 
         // Initialize knobs
         RotaryKnob attackKnob = findViewById(R.id.attackKnob);
