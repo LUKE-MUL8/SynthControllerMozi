@@ -26,8 +26,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
@@ -42,4 +42,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.github.ahmmedrejowan:RotaryKnob:0.1")
     implementation("com.github.convergencelab:PianoView:v0.1")
+    implementation("com.github.pdrogfer:MidiDroid:1.3")
 }
