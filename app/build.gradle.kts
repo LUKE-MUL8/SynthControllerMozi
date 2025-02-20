@@ -42,5 +42,4 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.github.ahmmedrejowan:RotaryKnob:0.1")
     implementation("com.github.convergencelab:PianoView:v0.1")
-    implementation("com.github.pdrogfer:MidiDroid:1.3")
 }

@@ -3,21 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="20dp">
+    android:gravity="center">
 
-    <!-- Play Button -->
+    <Button
+        android:id="@+id/openMidiButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open MIDI File" />
+
     <Button
         android:id="@+id/playButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Play MIDI" />
-
-    <!-- Open File Button to pick a MIDI file -->
-    <Button
-        android:id="@+id/openFileButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Open MIDI File" />
+        android:text="Play Test Note" />
 
 </LinearLayout>
