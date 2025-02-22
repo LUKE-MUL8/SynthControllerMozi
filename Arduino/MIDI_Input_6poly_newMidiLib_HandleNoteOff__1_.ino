@@ -1,23 +1,38 @@
 #define AUDIO_MODE STANDARD_PLUS
-#define AUDIO_RATE 16384 // Higher quality, still viable on Uno
+#define AUDIO_RATE 16384 // Higher quality within Uno limits
 #include <MozziGuts.h>
 #include <Oscil.h>
-#include <tables/saw1024_int8.h> // Smaller table for memory
+#include <ADSR.h>
+#include <tables/saw1024_int8.h> // Smaller sawtooth table for carrier
+#include <tables/sin1024_int8.h> // Smaller sine table for modulator
 #include <SoftwareSerial.h>
 
-#define CONTROL_RATE 128 // Faster updates
-#define NUM_VOICES 4
+#define CONTROL_RATE 128 // Faster updates for MIDI responsiveness
+#define NUM_VOICES 4     // Max voices for Uno
 
-Oscil<SAW1024_NUM_CELLS, AUDIO_RATE> aSaw1(SAW1024_DATA);
-Oscil<SAW1024_NUM_CELLS, AUDIO_RATE> aSaw2(SAW1024_DATA);
-Oscil<SAW1024_NUM_CELLS, AUDIO_RATE> aSaw3(SAW1024_DATA);
-Oscil<SAW1024_NUM_CELLS, AUDIO_RATE> aSaw4(SAW1024_DATA);
+// Oscillators and envelopes
+Oscil<SAW1024_NUM_CELLS, AUDIO_RATE> carriers[NUM_VOICES];
+Oscil<SIN1024_NUM_CELLS, AUDIO_RATE> modulators[NUM_VOICES];
+ADSR<CONTROL_RATE, AUDIO_RATE> envelopes[NUM_VOICES];
 
-int currentNotes[NUM_VOICES] = {-1, -1, -1, -1};
-unsigned long voiceTimes[NUM_VOICES] = {0, 0, 0, 0};
-SoftwareSerial btSerial(10, 11);
+// Voice management
+struct Voice {
+  byte note;
+  bool active;
+  unsigned long startTime;
+};
+Voice voices[NUM_VOICES];
 
-// Precomputed MIDI frequencies in PROGMEM
+// Bluetooth
+SoftwareSerial BTSerial(10, 11); // RX=10, TX=11
+
+// FM and envelope parameters
+int attack = 10, decay = 20, sustain = 128, release = 50;
+float modulationIndex = 2.0f;
+float modToCarrierRatio = 2.0f;
+int transpose = 0, octaveShift = 2;
+
+// Precomputed frequencies in PROGMEM
 const float midiFreqs[128] PROGMEM = {
   8.18, 8.66, 9.18, 9.72, 10.30, 10.91, 11.56, 12.25, 12.98, 13.75, 14.57, 15.43,
   16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87,
@@ -35,13 +50,21 @@ void setup() {
   Serial.begin(9600);
   delay(100);
   Serial.println("Ready");
-  btSerial.begin(9600); // Fixed at 9600 baud
+  BTSerial.begin(9600); // Fixed at 9600 baud
   delay(100);
+
+  // Initialize voices and oscillators
+  for (int i = 0; i < NUM_VOICES; i++) {
+    carriers[i].setTable(SAW1024_DATA);
+    modulators[i].setTable(SIN1024_DATA);
+    envelopes[i].setADLevels(255, sustain);
+    envelopes[i].setTimes(attack, decay, sustain, release);
+    voices[i].note = 0;
+    voices[i].active = false;
+    voices[i].startTime = 0;
+  }
+
   startMozzi(CONTROL_RATE);
-  aSaw1.setFreq(0);
-  aSaw2.setFreq(0);
-  aSaw3.setFreq(0);
-  aSaw4.setFreq(0);
   Serial.println("Start");
 }
 
@@ -49,63 +72,141 @@ char buffer[10];
 int bufPos = 0;
 
 void updateControl() {
-  while (btSerial.available()) {
-    char c = btSerial.read();
+  while (BTSerial.available()) {
+    char c = BTSerial.read();
     if (c == '\n' && bufPos > 0) {
       buffer[bufPos] = '\0';
-      if (buffer[0] == 'D') {
-        int note = atoi(buffer + 5);
-        if (note >= 0 && note < 128) {
-          int voice = -1;
-          for (int i = 0; i < NUM_VOICES; i++) {
-            if (currentNotes[i] == -1) { voice = i; break; }
-          }
-          if (voice == -1) {
-            unsigned long oldest = voiceTimes[0];
-            voice = 0;
-            for (int i = 1; i < NUM_VOICES; i++) {
-              if (voiceTimes[i] < oldest) {
-                oldest = voiceTimes[i];
-                voice = i;
-              }
-            }
-          }
-          currentNotes[voice] = note;
-          voiceTimes[voice] = millis();
-          float freq = pgm_read_float(&midiFreqs[note]);
-          switch (voice) {
-            case 0: aSaw1.setFreq(freq); break;
-            case 1: aSaw2.setFreq(freq); break;
-            case 2: aSaw3.setFreq(freq); break;
-            case 3: aSaw4.setFreq(freq); break;
-          }
-        }
-      } else if (buffer[0] == 'U') {
-        int note = atoi(buffer + 3);
-        for (int i = 0; i < NUM_VOICES; i++) {
-          if (currentNotes[i] == note) {
-            currentNotes[i] = -1;
-            voiceTimes[i] = 0;
-            switch (i) {
-              case 0: aSaw1.setFreq(0); break;
-              case 1: aSaw2.setFreq(0); break;
-              case 2: aSaw3.setFreq(0); break;
-              case 3: aSaw4.setFreq(0); break;
-            }
-            break;
-          }
-        }
-      }
+      parseCommand(buffer);
       bufPos = 0;
     } else if (bufPos < sizeof(buffer) - 1) {
       buffer[bufPos++] = c;
     }
   }
+
+  // Update envelopes
+  for (int i = 0; i < NUM_VOICES; i++) {
+    if (voices[i].active) {
+      envelopes[i].update();
+      if (!envelopes[i].playing()) { // Deactivate if envelope finishes
+        voices[i].active = false;
+        carriers[i].setFreq(0);
+        modulators[i].setFreq(0);
+      }
+    }
+  }
+}
+
+void parseCommand(const char* command) {
+  int separatorIndex = -1;
+  for (int i = 0; command[i] != '\0'; i++) {
+    if (command[i] == ':') {
+      separatorIndex = i;
+      break;
+    }
+  }
+  if (separatorIndex == -1) return;
+
+  String action = String(command).substring(0, separatorIndex);
+  int value = atoi(command + separatorIndex + 1);
+
+  if (action == "DOWN") {
+    playNote(value);
+  } else if (action == "UP") {
+    stopNote(value);
+  } else if (action == "ATTACK") {
+    attack = value;
+    updateEnvelopes();
+  } else if (action == "DECAY") {
+    decay = value;
+    updateEnvelopes();
+  } else if (action == "SUSTAIN") {
+    sustain = value;
+    updateEnvelopes();
+  } else if (action == "RELEASE") {
+    release = value;
+    updateEnvelopes();
+  } else if (action == "FILTER" || action == "DETUNE") {
+    // Placeholder for future use
+  } else if (action == "PANIC") {
+    midiPanic();
+  }
+}
+
+void updateEnvelopes() {
+  for (int i = 0; i < NUM_VOICES; i++) {
+    envelopes[i].setADLevels(255, sustain);
+    envelopes[i].setTimes(attack, decay, sustain, release);
+  }
+}
+
+void playNote(byte note) {
+  note += transpose;
+  float carrierFreq = pgm_read_float(&midiFreqs[note + 12 * octaveShift]);
+  float modFreq = carrierFreq * modToCarrierRatio;
+
+  int voiceIndex = -1;
+  for (int i = 0; i < NUM_VOICES; i++) {
+    if (!voices[i].active) {
+      voiceIndex = i;
+      break;
+    }
+  }
+  if (voiceIndex == -1) { // Voice stealing: oldest active voice
+    unsigned long oldest = voices[0].startTime;
+    voiceIndex = 0;
+    for (int i = 1; i < NUM_VOICES; i++) {
+      if (voices[i].active && voices[i].startTime < oldest) {
+        oldest = voices[i].startTime;
+        voiceIndex = i;
+      }
+    }
+  }
+
+  voices[voiceIndex].note = note;
+  voices[voiceIndex].active = true;
+  voices[voiceIndex].startTime = millis();
+  carriers[voiceIndex].setFreq(carrierFreq);
+  modulators[voiceIndex].setFreq(modFreq);
+  envelopes[voiceIndex].noteOn();
+}
+
+void stopNote(byte note) {
+  note += transpose;
+  for (int i = 0; i < NUM_VOICES; i++) {
+    if (voices[i].active && voices[i].note == note) {
+      envelopes[i].noteOff();
+      break; // Stop after first match
+    }
+  }
+}
+
+void midiPanic() {
+  for (int i = 0; i < NUM_VOICES; i++) {
+    if (voices[i].active) {
+      envelopes[i].noteOff();
+      voices[i].active = false;
+      carriers[i].setFreq(0);
+      modulators[i].setFreq(0);
+    }
+  }
+  Serial.println("MIDI Panic");
 }
 
 int updateAudio() {
-  int sum = aSaw1.next() + aSaw2.next() + aSaw3.next() + aSaw4.next();
-  return sum >> 2; // Fixed scaling, reliable up to 4 voices
+  long output = 0;
+  int activeVoices = 0;
+
+  for (int i = 0; i < NUM_VOICES; i++) {
+    if (voices[i].active) {
+      int modOut = modulators[i].next();
+      int fmOut = carriers[i].phMod((int)(modulationIndex * modOut) >> 8);
+      int envVal = envelopes[i].next();
+      output += ((long)fmOut * envVal) >> 8;
+      activeVoices++;
+    }
+  }
+
+  return activeVoices ? (output / activeVoices) : 0;
 }
 
 void loop() {
