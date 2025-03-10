@@ -17,6 +17,7 @@ The modulator frequency dynamically alters the carrier frequency.
 Bluetooth input adjusts the modulation index in real time.
 MIDI notes change automatically, producing dynamic tonal shifts.
 
+![image](https://github.com/user-attachments/assets/95d53f8b-b516-4617-907c-f7578ae18f4d)
 
-![Screenshot_20250213-154356](https://github.com/user-attachments/assets/9fd722e4-6a65-43d9-885f-614e72c3ed26)
+
 
