@@ -286,7 +286,7 @@ int updateAudio() {
   }
 
   // Use Mozzi's proper output functions
-  return MonoOutput::fromNBit(14, output);
+  return MonoOutput::fromNBit(16, output);
 }
 
 void loop() {
