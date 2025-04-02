@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Left panel with ADSR Knobs -->
+    <LinearLayout
+        android:id="@+id/adsrKnobContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.rejowan.rotaryknob.RotaryKnob
+            android:id="@+id/attackKnob"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_margin="4dp"
+            app:label_text="Attack"
+            app:max="255"
+            app:min="0" />
+
+        <com.rejowan.rotaryknob.RotaryKnob
+            android:id="@+id/decayKnob"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_margin="4dp"
+            app:label_text="Decay"
+            app:max="255"
+            app:min="0" />
+
+        <com.rejowan.rotaryknob.RotaryKnob
+            android:id="@+id/sustainKnob"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_margin="4dp"
+            app:label_text="Sustain"
+            app:max="255"
+            app:min="0" />
+
+        <com.rejowan.rotaryknob.RotaryKnob
+            android:id="@+id/releaseKnob"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_margin="4dp"
+            app:label_text="Release"
+            app:max="255"
+            app:min="0" />
+    </LinearLayout>
+
+    <!-- Piano View in the center -->
+    <!-- Piano View in the center -->
+    <com.convergencelabstfx.pianoview.PianoView
+        android:id="@+id/pianoView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:blackKeyColor="@color/blackKeyColor"
+        app:enableMultiKeyHighlighting="true"
+        app:keyCornerRadius="2dp"
+        app:keyPressedColor="#673AB7"
+        app:keyStrokeColor="@color/keyStrokeColor"
+        app:keyStrokeWidth="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rightPanel"
+        app:layout_constraintStart_toEndOf="@+id/adsrKnobContainer"
+        app:layout_constraintTop_toTopOf="parent"
+        app:numberOfKeys="24"
+        app:whiteKeyColor="@color/whiteKeyColor" />
+
+    <!-- Right panel with Filter, Detune, and buttons -->
+    <LinearLayout
+        android:id="@+id/rightPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.rejowan.rotaryknob.RotaryKnob
+            android:id="@+id/filterKnob"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_margin="4dp"
+            app:label_text="Filter"
+            app:max="255"
+            app:min="0" />
+
+        <com.rejowan.rotaryknob.RotaryKnob
+            android:id="@+id/detuneKnob"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_margin="4dp"
+            app:label_text="Detune"
+            app:max="255"
+            app:min="0" />
+
+        <!-- Octave controls -->
+        <LinearLayout
+            android:id="@+id/octaveControlContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="8dp">
+
+            <TextView
+                android:id="@+id/octaveTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Octave: 5"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/octaveDownButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- OCT" />
+
+                <Button
+                    android:id="@+id/octaveUpButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ OCT" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Panic button -->
+        <Button
+            android:id="@+id/panicButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Stop all notes" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

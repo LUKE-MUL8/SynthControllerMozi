@@ -6,13 +6,14 @@
     android:padding="16dp">
 
     <Button
-        android:id="@+id/reconnect_button"
+        android:id="@+id/setting_info_button"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginBottom="8dp"
-        android:text="Reconnect Bluetooth"
+        android:text="Settings and info"
         android:textSize="18sp"
-        app:icon="@drawable/baseline_bluetooth_24"
+        app:icon="@drawable/baseline_settings_24"
+        app:iconSize="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/midi_button"
         app:layout_constraintHorizontal_bias="0.0"
@@ -43,6 +44,7 @@
         android:textColor="@color/design_default_color_on_primary"
         android:textSize="18sp"
         app:icon="@drawable/baseline_piano_24"
+        app:iconSize="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/midi_button"
         app:layout_constraintHorizontal_weight="1"
@@ -55,11 +57,12 @@
         android:text="Kill Bluetooth"
         android:textSize="18sp"
         app:icon="@drawable/baseline_bluetooth_disabled_24"
+        app:iconSize="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/reconnect_button"
+        app:layout_constraintStart_toEndOf="@+id/setting_info_button"
         app:layout_constraintStart_toStartOf="@id/midi_button"
         app:layout_constraintTop_toBottomOf="@id/midi_button"
         app:layout_constraintVertical_bias="0.0" />
@@ -74,11 +77,10 @@
         android:textColor="@color/design_default_color_on_primary"
         android:textSize="18sp"
         app:icon="@drawable/baseline_queue_music_24"
+        app:iconSize="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/navigate_button" />
-
-    <!-- Add this to your existing activity_main.xml -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

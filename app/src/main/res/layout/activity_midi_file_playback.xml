@@ -15,6 +15,6 @@
         android:id="@+id/playButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Play Test Note" />
+        android:text="Stop playback" />
 
 </LinearLayout>

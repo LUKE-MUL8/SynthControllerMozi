@@ -30,7 +30,6 @@
             android:exported="false" />
         <activity
             android:name=".PerformActivity"
-            android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
