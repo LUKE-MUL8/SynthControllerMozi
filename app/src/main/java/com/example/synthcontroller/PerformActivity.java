@@ -7,129 +7,111 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.convergencelabstfx.pianoview.PianoTouchListener;
 import com.convergencelabstfx.pianoview.PianoView;
-import com.rejowan.rotaryknob.RotaryKnob;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class PerformActivity extends AppCompatActivity {
     private static final String TAG = "PerformActivity";
     private PianoView pianoView;
-    private RotaryKnob attackKnob, decayKnob, sustainKnob, releaseKnob, filterKnob, detuneKnob;
     private TextView octaveTextView;
 
-    // Define the starting MIDI note (e.g., 72 for C5)
-    private int midiNoteOffset = 72; // Starting at C5
+    // Define the starting MIDI note and octave
+    private int midiNoteOffset = 48; // C3
+    private int currentOctave = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perform);
 
-        if (!BluetoothManager.getInstance().isConnected()) {
-            Toast.makeText(this, "Bluetooth not connected", Toast.LENGTH_LONG).show();
-            new Thread(() -> {
-                if (BluetoothManager.getInstance().connect()) {
-                    runOnUiThread(() -> Toast.makeText(this, "Reconnected", Toast.LENGTH_SHORT).show());
-                } else {
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "Failed to reconnect", Toast.LENGTH_LONG).show();
-                        finish();
-                    });
-                }
-            }).start();
-            return;
-        }
-
-        // MIDI panic button
-        Button panicButton = findViewById(R.id.panicButton);
-        panicButton.setOnClickListener(v -> sendCommand("PANIC", 0));
-
-        // Octave control buttons
-        Button octaveDownButton = findViewById(R.id.octaveDownButton);
-        Button octaveUpButton = findViewById(R.id.octaveUpButton);
+        // Initialize piano and other controls
+        pianoView = findViewById(R.id.pianoView);
         octaveTextView = findViewById(R.id.octaveTextView);
 
-        updateOctaveDisplay();
+        // Set up piano listeners
+        setupPianoView();
 
-        octaveUpButton.setOnClickListener(v -> changeOctave(1));
-        octaveDownButton.setOnClickListener(v -> changeOctave(-1));
+        // Set up octave controls
+        setupOctaveControls();
 
-        // Initialize knobs
-        attackKnob = findViewById(R.id.attackKnob);
-        decayKnob = findViewById(R.id.decayKnob);
-        sustainKnob = findViewById(R.id.sustainKnob);
-        releaseKnob = findViewById(R.id.releaseKnob);
-        filterKnob = findViewById(R.id.filterKnob);
-        detuneKnob = findViewById(R.id.detuneKnob);
+        // Set up panic button
+        Button panicButton = findViewById(R.id.panicButton);
+        panicButton.setOnClickListener(v -> sendAllNotesOff());
 
-        setupKnob(attackKnob, "ATTACK");
-        setupKnob(decayKnob, "DECAY");
-        setupKnob(sustainKnob, "SUSTAIN");
-        setupKnob(releaseKnob, "RELEASE");
-        setupKnob(filterKnob, "FILTER");
-        setupKnob(detuneKnob, "DETUNE");
+        // Initialize Bluetooth
+        if (BluetoothManager.getInstance().connect()) {
+            Toast.makeText(this, "Connected to synthesizer", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Failed to connect", Toast.LENGTH_LONG).show();
+        }
 
-        // Piano setup
-        pianoView = findViewById(R.id.pianoView);
-        adjustPianoSizeBasedOnOrientation();
+        // Setup the tab layout
+        setupTabLayout();
+    }
 
+    private void setupPianoView() {
         pianoView.addPianoTouchListener(new PianoTouchListener() {
             @Override
             public void onKeyDown(PianoView piano, int key) {
-                int midiNote = midiNoteOffset + key; // Shift the key to a higher note
-                sendCommand("DOWN", midiNote);
-                Log.d(TAG, "Key down: " + key + " -> MIDI: " + midiNote); // Debug
+                int midiNote = midiNoteOffset + key;
+                sendCommand("DOWN:", midiNote);
+                Log.d(TAG, "Key down: " + key + " -> MIDI: " + midiNote);
             }
 
             @Override
             public void onKeyUp(PianoView piano, int key) {
-                int midiNote = midiNoteOffset + key; // Shift the key to a higher note
-                sendCommand("UP", midiNote);
-                Log.d(TAG, "Key up: " + key + " -> MIDI: " + midiNote); // Debug
+                int midiNote = midiNoteOffset + key;
+                sendCommand("UP:", midiNote);
+                Log.d(TAG, "Key up: " + key + " -> MIDI: " + midiNote);
             }
 
             @Override
             public void onKeyClick(PianoView piano, int key) {
-                // No action needed for key click
+                // Optional - handle click events if needed
             }
         });
     }
 
-    private void updateOctaveDisplay() {
-        // Calculate octave number (C4 is octave 4, MIDI note 60)
-        int octaveNumber = ((midiNoteOffset - 12) / 12) + 1;
-        octaveTextView.setText("Octave: " + octaveNumber);
-    }
+    private void setupOctaveControls() {
+        Button octaveUpButton = findViewById(R.id.octaveUpButton);
+        Button octaveDownButton = findViewById(R.id.octaveDownButton);
 
-    private void changeOctave(int delta) {
-        // Change by one octave (12 semitones)
-        midiNoteOffset += (delta * 12);
-
-        // limits (C0 to C8)
-        if (midiNoteOffset < 24) midiNoteOffset = 24;  // C2
-        if (midiNoteOffset > 108) midiNoteOffset = 108; // C9
+        octaveUpButton.setOnClickListener(v -> changeOctave(1));
+        octaveDownButton.setOnClickListener(v -> changeOctave(-1));
 
         updateOctaveDisplay();
-        Toast.makeText(this, "Octave changed", Toast.LENGTH_SHORT).show();
     }
 
-    private void setupKnob(RotaryKnob knob, String command) {
-        knob.setMin(0);
-        knob.setMax(255);
-        knob.setCurrentProgress(0);
-        knob.setProgressChangeListener(progress -> sendCommand(command, progress));
+    private void sendAllNotesOff() {
+        sendCommand("PANIC:", 1);
     }
 
-    private void sendCommand(String action, int value) {
-        String command = action + ":" + value;
-        if (BluetoothManager.getInstance().sendCommand(command)) {
-            Log.d(TAG, "Sent command: " + command);
+    // Single implementation of sendCommand
+    public void sendCommand(String command, int value) {
+        String fullCommand = command + value;
+        Log.d(TAG, "Sending command: " + fullCommand);
+
+        if (BluetoothManager.getInstance().isConnected()) {
+            BluetoothManager.getInstance().sendCommand(fullCommand);
         } else {
             Toast.makeText(this, "Failed to send command", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "Failed to send command: " + command);
+        }
+    }
+
+    private void adjustPianoSizeBasedOnOrientation() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            pianoView.setNumberOfKeys(36);
+        } else {
+            pianoView.setNumberOfKeys(24);
         }
     }
 
@@ -139,15 +121,73 @@ public class PerformActivity extends AppCompatActivity {
         adjustPianoSizeBasedOnOrientation();
     }
 
-    private void adjustPianoSizeBasedOnOrientation() {
-        // Refresh the piano view
-        pianoView.requestLayout();
+    private void updateOctaveDisplay() {
+        octaveTextView.setText("Octave: " + currentOctave);
+    }
 
-        // Set the number of keys based on orientation
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            pianoView.setNumberOfKeys(12);
-        } else {
-            pianoView.setNumberOfKeys(24);
+    private void changeOctave(int delta) {
+        currentOctave += delta;
+
+        // Limit octave range (0-8)
+        if (currentOctave < 0) currentOctave = 0;
+        if (currentOctave > 8) currentOctave = 8;
+
+        // Update the MIDI offset
+        midiNoteOffset = (currentOctave + 1) * 12; // C(octave+1)
+
+        updateOctaveDisplay();
+        sendCommand("OCTAVE:", currentOctave - 4); // Octave offset from middle C
+    }
+
+    private void setupTabLayout() {
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        ViewPager2 viewPager = findViewById(R.id.viewPager);
+
+        // Disable swipe navigation to prevent interference with knob controls
+        viewPager.setUserInputEnabled(false);
+
+        // Use FragmentStateAdapter with FragmentActivity
+        viewPager.setAdapter(new SynthPagerAdapter(this));
+
+        // Connect TabLayout with ViewPager2
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            switch (position) {
+                case 0: tab.setText("ADSR"); break;
+                case 1: tab.setText("Effects"); break;
+                case 2: tab.setText("Waveform"); break;
+            }
+        }).attach();
+    }
+
+    // Adapter class
+    private static class SynthPagerAdapter extends FragmentStateAdapter {
+        public SynthPagerAdapter(FragmentActivity fa) {
+            super(fa);
+        }
+
+        @Override
+        public int getItemCount() {
+            return 3;
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            switch (position) {
+                case 0: return new AdsrFragment();
+                case 1: return new EffectsFragment();
+                case 2: return new WaveformFragment();
+                default: return new AdsrFragment();
+            }
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Send PANIC command to release all notes when activity is destroyed
+        if (BluetoothManager.getInstance().isConnected()) {
+            BluetoothManager.getInstance().sendCommand("PANIC");
+        }
     }
+}

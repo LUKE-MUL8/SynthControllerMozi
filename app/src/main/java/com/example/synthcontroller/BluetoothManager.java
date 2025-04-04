@@ -94,7 +94,7 @@ public class BluetoothManager {
         }
     }
 
-    public synchronized boolean sendCommand(String command) {
+    public boolean sendCommand(String command) {
         if (!isConnected || !isSocketValid()) {
             Log.w(TAG, "Not connected or socket invalid, attempting to reconnect");
             if (!connect()) {
@@ -113,6 +113,9 @@ public class BluetoothManager {
             return false;
         }
     }
+
+
+
 
     public boolean isConnected() {
         return isConnected && isSocketValid();

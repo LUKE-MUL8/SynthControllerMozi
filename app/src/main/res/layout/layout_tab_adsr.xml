@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <!-- Attack Knob -->
+    <com.rejowan.rotaryknob.RotaryKnob
+        android:id="@+id/attackKnob"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:label_text="Attack"
+        app:label_text_color="#8062D6"
+        app:indicator_color="#8062D6"
+        app:suffix_text="ms" />
+
+    <!-- Decay Knob -->
+    <com.rejowan.rotaryknob.RotaryKnob
+        android:id="@+id/decayKnob"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:label_text="Decay"
+        app:label_text_color="#8062D6"
+        app:indicator_color="#8062D6"
+        app:suffix_text="ms" />
+
+    <!-- Sustain Knob -->
+    <com.rejowan.rotaryknob.RotaryKnob
+        android:id="@+id/sustainKnob"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:label_text="Sustain"
+        app:label_text_color="#8062D6"
+        app:indicator_color="#8062D6"
+        app:suffix_text="%" />
+
+    <!-- Release Knob -->
+    <com.rejowan.rotaryknob.RotaryKnob
+        android:id="@+id/releaseKnob"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:label_text="Release"
+        app:label_text_color="#8062D6"
+        app:indicator_color="#8062D6"
+        app:suffix_text="ms" />
+</LinearLayout>

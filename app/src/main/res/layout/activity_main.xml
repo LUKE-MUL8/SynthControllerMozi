@@ -40,7 +40,7 @@
         android:layout_height="80dp"
         android:layout_marginBottom="88dp"
         android:backgroundTint="@color/design_default_color_primary"
-        android:text="Perform and change sound"
+        android:text="Perform &amp; change sound"
         android:textColor="@color/design_default_color_on_primary"
         android:textSize="18sp"
         app:icon="@drawable/baseline_piano_24"
@@ -52,7 +52,7 @@
 
     <Button
         android:id="@+id/kill_bluetooth_button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="80dp"
         android:text="Kill Bluetooth"
         android:textSize="18sp"
