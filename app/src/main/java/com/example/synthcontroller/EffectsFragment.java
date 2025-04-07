@@ -26,7 +26,7 @@ public class EffectsFragment extends Fragment {
         // Set default values
         filterKnob.setCurrentProgress(255);
         detuneKnob.setCurrentProgress(0);
-        reverbKnob.setCurrentProgress(100);
+        reverbKnob.setCurrentProgress(0);
         vibRateKnob.setCurrentProgress(20);
         vibDepthKnob.setCurrentProgress(0);
 

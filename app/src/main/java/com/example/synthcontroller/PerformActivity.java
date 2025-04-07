@@ -3,7 +3,11 @@ package com.example.synthcontroller;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +22,7 @@ import com.convergencelabstfx.pianoview.PianoTouchListener;
 import com.convergencelabstfx.pianoview.PianoView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.rejowan.rotaryknob.RotaryKnob;
 
 public class PerformActivity extends AppCompatActivity {
     private static final String TAG = "PerformActivity";
@@ -54,8 +59,10 @@ public class PerformActivity extends AppCompatActivity {
             Toast.makeText(this, "Failed to connect", Toast.LENGTH_LONG).show();
         }
 
-        // Setup the tab layout
         setupTabLayout();
+
+        setupLandscapeControls();
+
     }
 
     private void setupPianoView() {
@@ -140,23 +147,31 @@ public class PerformActivity extends AppCompatActivity {
     }
 
     private void setupTabLayout() {
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        ViewPager2 viewPager = findViewById(R.id.viewPager);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            TabLayout tabLayout = findViewById(R.id.tabLayout);
+            ViewPager2 viewPager = findViewById(R.id.viewPager);
 
-        // Disable swipe navigation to prevent interference with knob controls
-        viewPager.setUserInputEnabled(false);
+            if (viewPager != null) {
+                // Disable swipe navigation to prevent interference with knob controls
+                viewPager.setUserInputEnabled(false);
 
-        // Use FragmentStateAdapter with FragmentActivity
-        viewPager.setAdapter(new SynthPagerAdapter(this));
+                // Use FragmentStateAdapter with FragmentActivity
+                viewPager.setAdapter(new SynthPagerAdapter(this));
 
-        // Connect TabLayout with ViewPager2
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            switch (position) {
-                case 0: tab.setText("ADSR"); break;
-                case 1: tab.setText("Effects"); break;
-                case 2: tab.setText("Waveform"); break;
+                // Connect TabLayout with ViewPager2
+                new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+                    switch (position) {
+                        case 0: tab.setText("ADSR"); break;
+                        case 1: tab.setText("Effects"); break;
+                        case 2: tab.setText("Waveform"); break;
+                    }
+                }).attach();
+            } else {
+                Log.e(TAG, "ViewPager2 is null");
             }
-        }).attach();
+        } else {
+            Log.i(TAG, "Landscape mode: ViewPager2 and TabLayout are not used");
+        }
     }
 
     // Adapter class
@@ -181,6 +196,156 @@ public class PerformActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void setupLandscapeControls() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // Setup ADSR controls
+            setupLandscapeAdsrControls();
+
+            // Setup Effects controls
+            setupLandscapeEffectControls();
+
+            setupLandscapeWaveformControls();
+
+        }
+    }
+
+    private void setupLandscapeWaveformControls() {
+        // Find spinners in landscape layout
+        Spinner mainWaveSpinner = findViewById(R.id.mainWaveSpinner);
+        Spinner subWaveSpinner = findViewById(R.id.subWaveSpinner);
+
+        String[] waveforms = {"Saw", "Square", "Sine", "Triangle"};
+
+        if (mainWaveSpinner != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this, android.R.layout.simple_spinner_item, waveforms);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            mainWaveSpinner.setAdapter(adapter);
+            mainWaveSpinner.setSelection(0);  // Saw as default
+
+            mainWaveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    sendCommand("MAIN_WAVE:", position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        }
+
+        if (subWaveSpinner != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this, android.R.layout.simple_spinner_item, waveforms);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            subWaveSpinner.setAdapter(adapter);
+            subWaveSpinner.setSelection(1);  // Square as default
+
+            subWaveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    sendCommand("SUB_WAVE:", position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        }
+    }
+
+    private void setupLandscapeAdsrControls() {
+        // Find ADSR knobs in landscape layout
+        RotaryKnob attackKnob = findViewById(R.id.attackKnob);
+        RotaryKnob decayKnob = findViewById(R.id.decayKnob);
+        RotaryKnob sustainKnob = findViewById(R.id.sustainKnob);
+        RotaryKnob releaseKnob = findViewById(R.id.releaseKnob);
+
+        // Configure ADSR knobs if they exist
+        if (attackKnob != null) {
+            attackKnob.setMin(0);
+            attackKnob.setMax(255);
+            attackKnob.setCurrentProgress(50);
+            attackKnob.setProgressChangeListener(progress ->
+                    sendCommand("ATTACK:", progress));
+        }
+
+        if (decayKnob != null) {
+            decayKnob.setMin(0);
+            decayKnob.setMax(255);
+            decayKnob.setCurrentProgress(100);
+            decayKnob.setProgressChangeListener(progress ->
+                    sendCommand("DECAY:", progress));
+        }
+
+        if (sustainKnob != null) {
+            sustainKnob.setMin(0);
+            sustainKnob.setMax(255);
+            sustainKnob.setCurrentProgress(180);
+            sustainKnob.setProgressChangeListener(progress ->
+                    sendCommand("SUSTAIN:", progress));
+        }
+
+        if (releaseKnob != null) {
+            releaseKnob.setMin(0);
+            releaseKnob.setMax(255);
+            releaseKnob.setCurrentProgress(100);
+            releaseKnob.setProgressChangeListener(progress ->
+                    sendCommand("RELEASE:", progress));
+        }
+    }
+
+    private void setupLandscapeEffectControls() {
+        // Find effects knobs in landscape layout
+        RotaryKnob filterKnob = findViewById(R.id.filterKnob);
+        RotaryKnob detuneKnob = findViewById(R.id.detuneKnob);
+        RotaryKnob reverbKnob = findViewById(R.id.reverbKnob);
+        RotaryKnob vibRateKnob = findViewById(R.id.vibRateKnob);
+        RotaryKnob vibDepthKnob = findViewById(R.id.vibDepthKnob);
+
+        // Configure effects knobs if they exist
+        if (filterKnob != null) {
+            filterKnob.setMin(0);
+            filterKnob.setMax(255);
+            filterKnob.setCurrentProgress(255);
+            filterKnob.setProgressChangeListener(progress ->
+                    sendCommand("FILTER:", progress));
+        }
+
+        if (detuneKnob != null) {
+            detuneKnob.setMin(0);
+            detuneKnob.setMax(255);
+            detuneKnob.setCurrentProgress(0);
+            detuneKnob.setProgressChangeListener(progress ->
+                    sendCommand("DETUNE:", progress));
+        }
+
+        if (reverbKnob != null) {
+            reverbKnob.setMin(0);
+            reverbKnob.setMax(255);
+            reverbKnob.setCurrentProgress(0);
+            reverbKnob.setProgressChangeListener(progress ->
+                    sendCommand("REVERB:", progress));
+        }
+
+        if (vibRateKnob != null) {
+            vibRateKnob.setMin(0);
+            vibRateKnob.setMax(255);
+            vibRateKnob.setCurrentProgress(0);
+            vibRateKnob.setProgressChangeListener(progress ->
+                    sendCommand("VIB_RATE:", progress));
+        }
+
+        if (vibDepthKnob != null) {
+            vibDepthKnob.setMin(0);
+            vibDepthKnob.setMax(255);
+            vibDepthKnob.setCurrentProgress(0);
+            vibDepthKnob.setProgressChangeListener(progress ->
+                    sendCommand("VIB_DEPTH:", progress));
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
