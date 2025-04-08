@@ -1,4 +1,4 @@
-**Sound Synthesis with Arduino and Mozzi Library.**
+**Sound Synthesis with ESP32 and Mozzi Library.**
 
 ![play_store_512](https://github.com/user-attachments/assets/43109a78-5093-42fa-8bc2-35925024911d)
 
