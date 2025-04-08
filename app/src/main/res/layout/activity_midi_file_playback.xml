@@ -1,20 +1,324 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/openMidiButton"
-        android:layout_width="wrap_content"
+    <!-- Transport controls at top -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Open MIDI File" />
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
-    <Button
-        android:id="@+id/playButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Stop playback" />
+        <Button
+            android:id="@+id/openMidiButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open MIDI File" />
 
+        <Button
+            android:id="@+id/playButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Stop" />
+    </LinearLayout>
+
+    <!-- Scrollable area for all synth controls -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- ADSR Controls -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ADSR Controls"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.rejowan.rotaryknob.RotaryKnob
+                        android:id="@+id/attackKnob"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:label_text="Attack"
+                        app:label_text_color="#8062D6"
+                        app:indicator_color="#8062D6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Attack" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.rejowan.rotaryknob.RotaryKnob
+                        android:id="@+id/decayKnob"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:label_text="Decay"
+                        app:label_text_color="#8062D6"
+                        app:indicator_color="#8062D6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Decay" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.rejowan.rotaryknob.RotaryKnob
+                        android:id="@+id/sustainKnob"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:label_text="Sustain"
+                        app:label_text_color="#8062D6"
+                        app:indicator_color="#8062D6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sustain" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.rejowan.rotaryknob.RotaryKnob
+                        android:id="@+id/releaseKnob"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:label_text="Release"
+                        app:label_text_color="#8062D6"
+                        app:indicator_color="#8062D6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Release" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Waveform Controls -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Waveform Controls"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Main Oscillator" />
+
+                    <Spinner
+                        android:id="@+id/mainWaveSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sub Oscillator" />
+
+                    <Spinner
+                        android:id="@+id/subWaveSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Effects Controls -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Effects Controls"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.rejowan.rotaryknob.RotaryKnob
+                        android:id="@+id/filterKnob"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:label_text="Filter"
+                        app:label_text_color="#8062D6"
+                        app:indicator_color="#8062D6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Filter" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.rejowan.rotaryknob.RotaryKnob
+                        android:id="@+id/detuneKnob"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:label_text="Detune"
+                        app:label_text_color="#8062D6"
+                        app:indicator_color="#8062D6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Detune" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.rejowan.rotaryknob.RotaryKnob
+                        android:id="@+id/reverbKnob"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:label_text="Reverb"
+                        app:label_text_color="#8062D6"
+                        app:indicator_color="#8062D6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reverb" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.rejowan.rotaryknob.RotaryKnob
+                        android:id="@+id/vibRateKnob"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:label_text="Vib Rate"
+                        app:label_text_color="#8062D6"
+                        app:indicator_color="#8062D6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="VibRate" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.rejowan.rotaryknob.RotaryKnob
+                        android:id="@+id/vibDepthKnob"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:label_text="Vib Depth"
+                        app:label_text_color="#8062D6"
+                        app:indicator_color="#8062D6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="VibDepth" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

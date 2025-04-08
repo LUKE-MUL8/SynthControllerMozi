@@ -26,7 +26,7 @@
             android:id="@+id/mainWaveSpinner"
             android:layout_width="180dp"
             android:layout_height="48dp"
-            android:background="@drawable/spinner_background"/>
+            android:background="#333333"/>
     </LinearLayout>
 
     <!-- Sub Waveform -->
@@ -48,6 +48,6 @@
             android:id="@+id/subWaveSpinner"
             android:layout_width="180dp"
             android:layout_height="48dp"
-            android:background="@drawable/spinner_background"/>
+            android:background="#333333"/>
     </LinearLayout>
 </LinearLayout>

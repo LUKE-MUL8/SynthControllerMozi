@@ -3,7 +3,11 @@ package com.example.synthcontroller;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -16,6 +20,7 @@ import com.leff.midi.event.MidiEvent;
 import com.leff.midi.event.NoteOff;
 import com.leff.midi.event.NoteOn;
 import com.leff.midi.event.meta.Tempo;
+import com.rejowan.rotaryknob.RotaryKnob;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +58,7 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         Toast.makeText(this, "Reconnected", Toast.LENGTH_SHORT).show();
                         initializeSynthParameters();
+                        setupSynthControls();
                     });
                 } else {
                     runOnUiThread(() -> {
@@ -64,32 +70,180 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
         } else {
             // If already connected, initialize parameters immediately
             initializeSynthParameters();
+            setupSynthControls();
         }
 
         // Open MIDI file button
         Button openMidiButton = findViewById(R.id.openMidiButton);
         openMidiButton.setOnClickListener(v -> openFileLauncher.launch("audio/midi"));
 
-        // Renamed button from stopButton to stopButton for clarity
         Button stopButton = findViewById(R.id.playButton);
-        stopButton.setText("Stop"); // Change button text to reflect its new function
+        stopButton.setText("Stop");
         stopButton.setOnClickListener(v -> stopPlayback());
     }
 
-    private void initializeSynthParameters() {
-            Log.d(TAG, "Setting synth parameters for MIDI playback");
-            BluetoothManager btManager = BluetoothManager.getInstance();
-            // Set decay and filter to max
-            btManager.sendCommand("DECAY:255");
-            btManager.sendCommand("FILTER:255");
-            // Set others to min
-            btManager.sendCommand("ATTACK:0");
-            btManager.sendCommand("SUSTAIN:0");
-            btManager.sendCommand("RELEASE:0");
-            btManager.sendCommand("DETUNE:0");
+    private void setupSynthControls() {
+        setupAdsrControls();
+        setupEffectsControls();
+        setupWaveformControls();
+    }
 
-            Toast.makeText(this, "Synth parameters initialized for MIDI playback", Toast.LENGTH_SHORT).show();
+    private void setupAdsrControls() {
+        // Find ADSR knobs in layout
+        RotaryKnob attackKnob = findViewById(R.id.attackKnob);
+        RotaryKnob decayKnob = findViewById(R.id.decayKnob);
+        RotaryKnob sustainKnob = findViewById(R.id.sustainKnob);
+        RotaryKnob releaseKnob = findViewById(R.id.releaseKnob);
+
+        // Configure ADSR knobs
+        if (attackKnob != null) {
+            attackKnob.setMin(0);
+            attackKnob.setMax(255);
+            attackKnob.setCurrentProgress(0);
+            attackKnob.setProgressChangeListener(progress ->
+                    sendCommand("ATTACK:", progress));
         }
+
+        if (decayKnob != null) {
+            decayKnob.setMin(0);
+            decayKnob.setMax(255);
+            decayKnob.setCurrentProgress(255);
+            decayKnob.setProgressChangeListener(progress ->
+                    sendCommand("DECAY:", progress));
+        }
+
+        if (sustainKnob != null) {
+            sustainKnob.setMin(0);
+            sustainKnob.setMax(255);
+            sustainKnob.setCurrentProgress(0);
+            sustainKnob.setProgressChangeListener(progress ->
+                    sendCommand("SUSTAIN:", progress));
+        }
+
+        if (releaseKnob != null) {
+            releaseKnob.setMin(0);
+            releaseKnob.setMax(255);
+            releaseKnob.setCurrentProgress(0);
+            releaseKnob.setProgressChangeListener(progress ->
+                    sendCommand("RELEASE:", progress));
+        }
+    }
+
+    private void setupEffectsControls() {
+        // Find effects knobs in layout
+        RotaryKnob filterKnob = findViewById(R.id.filterKnob);
+        RotaryKnob detuneKnob = findViewById(R.id.detuneKnob);
+        RotaryKnob reverbKnob = findViewById(R.id.reverbKnob);
+        RotaryKnob vibRateKnob = findViewById(R.id.vibRateKnob);
+        RotaryKnob vibDepthKnob = findViewById(R.id.vibDepthKnob);
+
+        // Configure effects knobs
+        if (filterKnob != null) {
+            filterKnob.setMin(0);
+            filterKnob.setMax(255);
+            filterKnob.setCurrentProgress(255);
+            filterKnob.setProgressChangeListener(progress ->
+                    sendCommand("FILTER:", progress));
+        }
+
+        if (detuneKnob != null) {
+            detuneKnob.setMin(0);
+            detuneKnob.setMax(255);
+            detuneKnob.setCurrentProgress(0);
+            detuneKnob.setProgressChangeListener(progress ->
+                    sendCommand("DETUNE:", progress));
+        }
+
+        if (reverbKnob != null) {
+            reverbKnob.setMin(0);
+            reverbKnob.setMax(255);
+            reverbKnob.setCurrentProgress(0);
+            reverbKnob.setProgressChangeListener(progress ->
+                    sendCommand("REVERB:", progress));
+        }
+
+        if (vibRateKnob != null) {
+            vibRateKnob.setMin(0);
+            vibRateKnob.setMax(255);
+            vibRateKnob.setCurrentProgress(0);
+            vibRateKnob.setProgressChangeListener(progress ->
+                    sendCommand("VIB_RATE:", progress));
+        }
+
+        if (vibDepthKnob != null) {
+            vibDepthKnob.setMin(0);
+            vibDepthKnob.setMax(255);
+            vibDepthKnob.setCurrentProgress(0);
+            vibDepthKnob.setProgressChangeListener(progress ->
+                    sendCommand("VIB_DEPTH:", progress));
+        }
+    }
+
+    private void setupWaveformControls() {
+        // Find spinners in layout
+        Spinner mainWaveSpinner = findViewById(R.id.mainWaveSpinner);
+        Spinner subWaveSpinner = findViewById(R.id.subWaveSpinner);
+
+        String[] waveforms = {"Saw", "Square", "Sine", "Triangle"};
+
+        if (mainWaveSpinner != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this, android.R.layout.simple_spinner_item, waveforms);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            mainWaveSpinner.setAdapter(adapter);
+            mainWaveSpinner.setSelection(0);  // Saw as default
+
+            mainWaveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    sendCommand("MAIN_WAVE:", position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        }
+
+        if (subWaveSpinner != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this, android.R.layout.simple_spinner_item, waveforms);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            subWaveSpinner.setAdapter(adapter);
+            subWaveSpinner.setSelection(1);  // Square as default
+
+            subWaveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    sendCommand("SUB_WAVE:", position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        }
+    }
+
+    private void initializeSynthParameters() {
+        Log.d(TAG, "Setting synth parameters for MIDI playback");
+        BluetoothManager btManager = BluetoothManager.getInstance();
+        // Set decay and filter to max
+        btManager.sendCommand("DECAY:255");
+        btManager.sendCommand("FILTER:255");
+        // Set others to min
+        btManager.sendCommand("ATTACK:0");
+        btManager.sendCommand("SUSTAIN:0");
+        btManager.sendCommand("RELEASE:0");
+        btManager.sendCommand("DETUNE:0");
+
+        Toast.makeText(this, "Synth parameters initialized for MIDI playback", Toast.LENGTH_SHORT).show();
+    }
+
+    // Method for controls to send commands - no interface needed
+    public void sendCommand(String prefix, int value) {
+        BluetoothManager.getInstance().sendCommand(prefix + value);
+    }
 
     private void stopPlayback() {
         if (isPlaying.get()) {
