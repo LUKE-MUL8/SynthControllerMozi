@@ -46,6 +46,8 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
                 }
             });
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -269,6 +271,8 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
             BluetoothManager.getInstance().sendCommand("UP:" + note);
         }
         Log.d(TAG, "Sent all notes off");
+        sendCommand("PANIC:", 1);
+
     }
 
     private void playMidiFile(Uri uri) {

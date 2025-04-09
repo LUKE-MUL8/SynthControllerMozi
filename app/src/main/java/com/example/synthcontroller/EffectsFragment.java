@@ -19,21 +19,21 @@ public class EffectsFragment extends Fragment {
 
         filterKnob = view.findViewById(R.id.filterKnob);
         detuneKnob = view.findViewById(R.id.detuneKnob);
-        reverbKnob = view.findViewById(R.id.reverbKnob);
+//        reverbKnob = view.findViewById(R.id.reverbKnob);
         vibRateKnob = view.findViewById(R.id.vibRateKnob);
         vibDepthKnob = view.findViewById(R.id.vibDepthKnob);
 
         // Set default values
         filterKnob.setCurrentProgress(255);
         detuneKnob.setCurrentProgress(0);
-        reverbKnob.setCurrentProgress(0);
+//        reverbKnob.setCurrentProgress(0);
         vibRateKnob.setCurrentProgress(20);
         vibDepthKnob.setCurrentProgress(0);
 
         // Setup listeners
         setupKnob(filterKnob, "FILTER:");
         setupKnob(detuneKnob, "DETUNE:");
-        setupKnob(reverbKnob, "REVERB:");
+//        setupKnob(reverbKnob, "REVERB:");
         setupKnob(vibRateKnob, "VIB_RATE:");
         setupKnob(vibDepthKnob, "VIB_DEPTH:");
 

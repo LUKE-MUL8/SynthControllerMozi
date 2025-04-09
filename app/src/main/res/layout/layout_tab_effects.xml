@@ -15,7 +15,7 @@
         <com.rejowan.rotaryknob.RotaryKnob
             android:id="@+id/filterKnob"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_weight="1"
             app:label_text="Filter"
             app:label_text_color="#8062D6"
@@ -24,14 +24,14 @@
         <com.rejowan.rotaryknob.RotaryKnob
             android:id="@+id/detuneKnob"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_weight="1"
             app:label_text="Detune"
             app:label_text_color="#8062D6"
             app:indicator_color="#8062D6" />
     </LinearLayout>
 
-    <!-- Second Row of Knobs -->
+    <!-- Second Row of Knobs (Reverb knob removed) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,18 +39,9 @@
         android:layout_marginTop="16dp">
 
         <com.rejowan.rotaryknob.RotaryKnob
-            android:id="@+id/reverbKnob"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:label_text="Reverb"
-            app:label_text_color="#8062D6"
-            app:indicator_color="#8062D6" />
-
-        <com.rejowan.rotaryknob.RotaryKnob
             android:id="@+id/vibRateKnob"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_weight="1"
             app:label_text="Vib Rate"
             app:label_text_color="#8062D6"
@@ -59,7 +50,7 @@
         <com.rejowan.rotaryknob.RotaryKnob
             android:id="@+id/vibDepthKnob"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_weight="1"
             app:label_text="Vib Depth"
             app:label_text_color="#8062D6"

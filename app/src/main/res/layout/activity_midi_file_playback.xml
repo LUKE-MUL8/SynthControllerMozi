@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="Stop" />
+
     </LinearLayout>
 
     <!-- Scrollable area for all synth controls -->
@@ -64,14 +65,15 @@
                         android:id="@+id/attackKnob"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        app:label_text="Attack"
-                        app:label_text_color="#8062D6"
-                        app:indicator_color="#8062D6" />
+                        app:indicator_color="#8062D6"
+                        app:show_label="false" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Attack" />
+                        android:text="Attack"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -85,14 +87,15 @@
                         android:id="@+id/decayKnob"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        app:label_text="Decay"
-                        app:label_text_color="#8062D6"
-                        app:indicator_color="#8062D6" />
+                        app:indicator_color="#8062D6"
+                        app:show_label="false" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Decay" />
+                        android:text="Decay"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -106,14 +109,15 @@
                         android:id="@+id/sustainKnob"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        app:label_text="Sustain"
-                        app:label_text_color="#8062D6"
-                        app:indicator_color="#8062D6" />
+                        app:indicator_color="#8062D6"
+                        app:show_label="false" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sustain" />
+                        android:text="Sustain"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -127,14 +131,15 @@
                         android:id="@+id/releaseKnob"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        app:label_text="Release"
-                        app:label_text_color="#8062D6"
-                        app:indicator_color="#8062D6" />
+                        app:indicator_color="#8062D6"
+                        app:show_label="false" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Release" />
+                        android:text="Release"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -197,6 +202,7 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
 
+            <!-- First row of effects controls -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -212,65 +218,48 @@
 
                     <com.rejowan.rotaryknob.RotaryKnob
                         android:id="@+id/filterKnob"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        app:label_text="Filter"
-                        app:label_text_color="#8062D6"
-                        app:indicator_color="#8062D6" />
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:indicator_color="#8062D6"
+                        app:show_label="false" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Filter" />
+                        android:text="Filter"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <com.rejowan.rotaryknob.RotaryKnob
                         android:id="@+id/detuneKnob"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        app:label_text="Detune"
-                        app:label_text_color="#8062D6"
-                        app:indicator_color="#8062D6" />
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:indicator_color="#8062D6"
+                        app:show_label="false" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Detune" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <com.rejowan.rotaryknob.RotaryKnob
-                        android:id="@+id/reverbKnob"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        app:label_text="Reverb"
-                        app:label_text_color="#8062D6"
-                        app:indicator_color="#8062D6" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Reverb" />
+                        android:text="Detune"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Second row of effects controls -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -281,16 +270,17 @@
 
                     <com.rejowan.rotaryknob.RotaryKnob
                         android:id="@+id/vibRateKnob"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        app:label_text="Vib Rate"
-                        app:label_text_color="#8062D6"
-                        app:indicator_color="#8062D6" />
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:indicator_color="#8062D6"
+                        app:show_label="false" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="VibRate" />
+                        android:text="Vib Rate"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -302,22 +292,18 @@
 
                     <com.rejowan.rotaryknob.RotaryKnob
                         android:id="@+id/vibDepthKnob"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        app:label_text="Vib Depth"
-                        app:label_text_color="#8062D6"
-                        app:indicator_color="#8062D6" />
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:indicator_color="#8062D6"
+                        app:show_label="false" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="VibDepth" />
+                        android:text="Vib Depth"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
