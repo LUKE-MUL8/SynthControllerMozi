@@ -5,31 +5,72 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Transport controls at top -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
 
         <Button
-            android:id="@+id/openMidiButton"
-            android:layout_width="wrap_content"
+            android:id="@+id/selectFileButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Open MIDI File" />
+            android:layout_weight="1"
+            android:text="Select MIDI File" />
 
         <Button
             android:id="@+id/playButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Stop" />
+            android:text="Play"
+            android:layout_marginStart="8dp"
+            android:enabled="false" />
 
+        <Button
+            android:id="@+id/stopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop"
+            android:layout_marginStart="8dp" />
     </LinearLayout>
 
-    <!-- Scrollable area for all synth controls -->
-    <ScrollView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Preset:"
+            android:layout_marginEnd="8dp" />
+
+        <Spinner
+            android:id="@+id/presetSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="48dp" />
+
+        <Button
+            android:id="@+id/loadPresetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Load"
+            android:layout_marginStart="4dp"/>
+
+        <Button
+            android:id="@+id/savePresetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_marginStart="4dp"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -304,7 +345,9 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
+
 </LinearLayout>

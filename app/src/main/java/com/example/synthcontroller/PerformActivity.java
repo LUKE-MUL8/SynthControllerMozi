@@ -81,29 +81,16 @@ public class PerformActivity extends AppCompatActivity {
         presetManager = new PresetManager(this);
 
         presetSpinner = findViewById(R.id.presetSpinner);
-        savePresetButton = findViewById(R.id.savePresetButton);
         loadPresetButton = findViewById(R.id.loadPresetButton);
+        savePresetButton = findViewById(R.id.savePresetButton);
 
-        Log.d(TAG, "Preset controls: " +
-                "spinner=" + (presetSpinner != null) +
-                ", saveBtn=" + (savePresetButton != null) +
-                ", loadBtn=" + (loadPresetButton != null));
-
-        // Check if the views are found (they might be null in some layouts)
-        if (presetSpinner != null && savePresetButton != null && loadPresetButton != null) {
+        if (presetSpinner != null && loadPresetButton != null && savePresetButton != null) {
             updatePresetSpinner();
 
-            savePresetButton.setOnClickListener(v -> {
-                Log.d(TAG, "Save preset button clicked");
-                showSavePresetDialog();
-            });
-
-            loadPresetButton.setOnClickListener(v -> {
-                Log.d(TAG, "Load preset button clicked");
-                loadSelectedPreset();
-            });
+            loadPresetButton.setOnClickListener(v -> loadSelectedPreset());
+            savePresetButton.setOnClickListener(v -> showSavePresetDialog());
         } else {
-            Log.e(TAG, "Some preset controls are missing in the layout");
+            Log.e(TAG, "Preset UI elements not found in layout");
         }
     }
 
@@ -129,6 +116,7 @@ public class PerformActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void setupOctaveControls() {
         Button octaveUpButton = findViewById(R.id.octaveUpButton);
@@ -536,14 +524,24 @@ public class PerformActivity extends AppCompatActivity {
 
     private void setupLandscapeControls() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // Setup ADSR controls
+            // Setup preset controls for landscape mode
+            presetManager = new PresetManager(this);
+
+            presetSpinner = findViewById(R.id.presetSpinner);
+            savePresetButton = findViewById(R.id.savePresetButton);
+            loadPresetButton = findViewById(R.id.loadPresetButton);
+
+            if (presetSpinner != null && savePresetButton != null && loadPresetButton != null) {
+                updatePresetSpinner();
+
+                savePresetButton.setOnClickListener(v -> showSavePresetDialog());
+                loadPresetButton.setOnClickListener(v -> loadSelectedPreset());
+            }
+
+            // Setup other landscape controls...
             setupLandscapeAdsrControls();
-
-            // Setup Effects controls
             setupLandscapeEffectControls();
-
             setupLandscapeWaveformControls();
-
         }
     }
 

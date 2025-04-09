@@ -35,6 +35,7 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
     // Flag to control playback thread
     private AtomicBoolean isPlaying = new AtomicBoolean(false);
     private Thread playbackThread = null;
+    private PresetManager presetManager;
 
     private final ActivityResultLauncher<String> openFileLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
@@ -45,8 +46,6 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
                     Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
                 }
             });
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +74,170 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
             setupSynthControls();
         }
 
-        // Open MIDI file button
-        Button openMidiButton = findViewById(R.id.openMidiButton);
-        openMidiButton.setOnClickListener(v -> openFileLauncher.launch("audio/midi"));
+        // Setup preset controls
+        presetManager = new PresetManager(this);
+        setupPresetControls();
 
-        Button stopButton = findViewById(R.id.playButton);
-        stopButton.setText("Stop");
+
+
+        Button stopButton = findViewById(R.id.stopButton);
+
+
+
         stopButton.setOnClickListener(v -> stopPlayback());
+
+        Button selectFileButton = findViewById(R.id.selectFileButton);
+        if (selectFileButton != null) {
+            selectFileButton.setOnClickListener(v -> {
+                Log.d(TAG, "Select file button clicked");
+                openFileLauncher.launch("audio/midi");
+            });
+        }
+    }
+
+    private void setupPresetControls() {
+        Spinner presetSpinner = findViewById(R.id.presetSpinner);
+        Button loadPresetButton = findViewById(R.id.loadPresetButton);
+        Button savePresetButton = findViewById(R.id.savePresetButton);
+
+        updatePresetSpinner(presetSpinner);
+
+        loadPresetButton.setOnClickListener(v -> loadSelectedPreset(presetSpinner));
+        savePresetButton.setOnClickListener(v -> showSavePresetDialog());
+    }
+
+    private void updatePresetSpinner(Spinner spinner) {
+        List<String> presetNames = presetManager.getPresetNames();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, presetNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
+
+    private void loadSelectedPreset(Spinner spinner) {
+        if (spinner.getSelectedItem() == null) {
+            Toast.makeText(this, "No preset selected", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String presetName = spinner.getSelectedItem().toString();
+        SynthPreset preset = presetManager.getPreset(presetName);
+
+        if (preset == null) {
+            Toast.makeText(this, "Preset not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Send parameters to the synth
+        sendCommand("MAIN_WAVE:", preset.getMainWaveform());
+        sendCommand("SUB_WAVE:", preset.getSubWaveform());
+        sendCommand("ATTACK:", preset.getAttack());
+        sendCommand("DECAY:", preset.getDecay());
+        sendCommand("SUSTAIN:", preset.getSustain());
+        sendCommand("RELEASE:", preset.getRelease());
+        sendCommand("FILTER:", preset.getFilter());
+        sendCommand("DETUNE:", preset.getDetune());
+        sendCommand("VIB_RATE:", preset.getVibRate());
+        sendCommand("VIB_DEPTH:", preset.getVibDepth());
+
+        // Update UI controls to reflect loaded values
+        updateUIFromPreset(preset);
+
+        Toast.makeText(this, "Preset loaded: " + presetName, Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateUIFromPreset(SynthPreset preset) {
+        // Update waveform spinners
+        updateSpinnerIfExists(R.id.mainWaveSpinner, preset.getMainWaveform());
+        updateSpinnerIfExists(R.id.subWaveSpinner, preset.getSubWaveform());
+
+        // Update knobs
+        updateKnobIfExists(R.id.attackKnob, preset.getAttack());
+        updateKnobIfExists(R.id.decayKnob, preset.getDecay());
+        updateKnobIfExists(R.id.sustainKnob, preset.getSustain());
+        updateKnobIfExists(R.id.releaseKnob, preset.getRelease());
+        updateKnobIfExists(R.id.filterKnob, preset.getFilter());
+        updateKnobIfExists(R.id.detuneKnob, preset.getDetune());
+        updateKnobIfExists(R.id.vibRateKnob, preset.getVibRate());
+        updateKnobIfExists(R.id.vibDepthKnob, preset.getVibDepth());
+    }
+
+    private void updateKnobIfExists(int id, int value) {
+        RotaryKnob knob = findViewById(id);
+        if (knob != null) {
+            knob.setCurrentProgress(value);
+        }
+    }
+
+    private void updateSpinnerIfExists(int id, int position) {
+        Spinner spinner = findViewById(id);
+        if (spinner != null && position >= 0 && position < spinner.getAdapter().getCount()) {
+            spinner.setSelection(position);
+        }
+    }
+
+    private void showSavePresetDialog() {
+        // Use same pattern as in PerformActivity
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_save_preset, null);
+        android.widget.EditText input = dialogView.findViewById(R.id.presetNameInput);
+
+        android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
+                .setTitle("Save Preset")
+                .setView(dialogView)
+                .setPositiveButton("Save", null)
+                .setNegativeButton("Cancel", (d, which) -> d.dismiss())
+                .create();
+
+        dialog.show();
+
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String presetName = input.getText().toString().trim();
+            if (presetName.isEmpty()) {
+                input.setError("Please enter a name");
+            } else {
+                saveCurrentPreset(presetName);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void saveCurrentPreset(String name) {
+        SynthPreset preset = new SynthPreset();
+        preset.setName(name);
+
+        // Get values from UI controls
+        Spinner mainWaveSpinner = findViewById(R.id.mainWaveSpinner);
+        Spinner subWaveSpinner = findViewById(R.id.subWaveSpinner);
+
+        if (mainWaveSpinner != null) {
+            preset.setMainWaveform(mainWaveSpinner.getSelectedItemPosition());
+        }
+
+        if (subWaveSpinner != null) {
+            preset.setSubWaveform(subWaveSpinner.getSelectedItemPosition());
+        }
+
+        preset.setAttack(getKnobValue(R.id.attackKnob));
+        preset.setDecay(getKnobValue(R.id.decayKnob));
+        preset.setSustain(getKnobValue(R.id.sustainKnob));
+        preset.setRelease(getKnobValue(R.id.releaseKnob));
+        preset.setFilter(getKnobValue(R.id.filterKnob));
+        preset.setDetune(getKnobValue(R.id.detuneKnob));
+        preset.setVibRate(getKnobValue(R.id.vibRateKnob));
+        preset.setVibDepth(getKnobValue(R.id.vibDepthKnob));
+
+        // Save preset
+        presetManager.savePreset(preset);
+
+        // Update spinner
+        updatePresetSpinner(findViewById(R.id.presetSpinner));
+
+        Toast.makeText(this, "Preset saved: " + name, Toast.LENGTH_SHORT).show();
+    }
+
+    private int getKnobValue(int knobId) {
+        RotaryKnob knob = findViewById(knobId);
+        return knob != null ? knob.getCurrentProgress() : 0;
     }
 
     private void setupSynthControls() {
@@ -173,11 +329,10 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
     }
 
     private void setupWaveformControls() {
-        // Find spinners in layout
         Spinner mainWaveSpinner = findViewById(R.id.mainWaveSpinner);
         Spinner subWaveSpinner = findViewById(R.id.subWaveSpinner);
 
-        String[] waveforms = {"Saw", "Square", "Sine", "Triangle"};
+        final String[] waveforms = {"Saw", "Square", "Sine", "Triangle"};
 
         if (mainWaveSpinner != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -187,14 +342,18 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
             mainWaveSpinner.setAdapter(adapter);
             mainWaveSpinner.setSelection(0);  // Saw as default
 
-            mainWaveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    sendCommand("MAIN_WAVE:", position);
-                }
+            // Fix for spinner listeners
+            mainWaveSpinner.post(() -> {
+                mainWaveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Log.d(TAG, "Main wave selected: " + position);
+                        sendCommand("MAIN_WAVE:", position);
+                    }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
             });
         }
 
@@ -206,14 +365,18 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
             subWaveSpinner.setAdapter(adapter);
             subWaveSpinner.setSelection(1);  // Square as default
 
-            subWaveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    sendCommand("SUB_WAVE:", position);
-                }
+            // Fix for spinner listeners
+            subWaveSpinner.post(() -> {
+                subWaveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Log.d(TAG, "Sub wave selected: " + position);
+                        sendCommand("SUB_WAVE:", position);
+                    }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
             });
         }
     }
@@ -235,7 +398,9 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
 
     // Method for controls to send commands - no interface needed
     public void sendCommand(String prefix, int value) {
-        BluetoothManager.getInstance().sendCommand(prefix + value);
+        String command = prefix + value;
+        Log.d(TAG, "Sending command: " + command);
+        BluetoothManager.getInstance().sendCommand(command);
     }
 
     private void stopPlayback() {
@@ -263,7 +428,6 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
         }
         Log.d(TAG, "Sent all notes off");
         sendCommand("PANIC:", 1);
-
     }
 
     private void playMidiFile(Uri uri) {
@@ -281,9 +445,29 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
                 inputStream.close();
 
                 List<Command> commands = new ArrayList<>();
-                float microsecondsPerQuarterNote = 500000.0f;
+                float microsecondsPerQuarterNote = 500000.0f;  // Default 120 BPM
                 int ticksPerQuarterNote = midiFile.getResolution();
 
+                Log.d(TAG, "MIDI resolution: " + ticksPerQuarterNote + " ticks per quarter note");
+
+                // First pass - collect tempo events
+                List<TempoEvent> tempoEvents = new ArrayList<>();
+                for (MidiTrack track : midiFile.getTracks()) {
+                    long currentTick = 0;
+                    for (MidiEvent event : track.getEvents()) {
+                        currentTick += event.getDelta();
+                        if (event instanceof Tempo) {
+                            Tempo tempo = (Tempo) event;
+                            tempoEvents.add(new TempoEvent(currentTick, tempo.getMpqn()));
+                            Log.d(TAG, "Found tempo event at tick " + currentTick + ": " + tempo.getBpm() + " BPM");
+                        }
+                    }
+                }
+
+                // Sort tempo events by tick
+                tempoEvents.sort((a, b) -> Long.compare(a.tick, b.tick));
+
+                // Second pass - process note events with correct timing
                 for (MidiTrack track : midiFile.getTracks()) {
                     long currentTick = 0;
                     Iterator<MidiEvent> it = track.getEvents().iterator();
@@ -292,13 +476,8 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
                         MidiEvent event = it.next();
                         currentTick += event.getDelta();
 
-                        if (event instanceof Tempo) {
-                            Tempo tempo = (Tempo) event;
-                            microsecondsPerQuarterNote = tempo.getMpqn();
-                            Log.d(TAG, "Tempo updated: " + tempo.getBpm() + " BPM");
-                        }
-
-                        long ms = (long) ((currentTick * microsecondsPerQuarterNote) / (ticksPerQuarterNote * 1000.0f));
+                        // Calculate correct timing based on tempo changes
+                        long ms = ticksToMs(currentTick, tempoEvents, ticksPerQuarterNote);
 
                         if (event instanceof NoteOn) {
                             NoteOn noteOn = (NoteOn) event;
@@ -320,6 +499,8 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
                 commands.sort((a, b) -> Long.compare(a.timestamp, b.timestamp));
 
                 long startTime = System.currentTimeMillis();
+                long lastTimestamp = 0;
+
                 for (Command cmd : commands) {
                     // Check if playback has been stopped
                     if (!isPlaying.get()) {
@@ -329,6 +510,12 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
 
                     long elapsedTime = System.currentTimeMillis() - startTime;
                     long delay = cmd.timestamp - elapsedTime;
+
+                    // Log timing information for debugging
+                    if (cmd.timestamp - lastTimestamp > 500) {
+                        Log.d(TAG, "Large gap in timestamps: " + (cmd.timestamp - lastTimestamp) + "ms");
+                    }
+                    lastTimestamp = cmd.timestamp;
 
                     if (delay > 0) {
                         Thread.sleep(delay);
@@ -364,6 +551,35 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
         playbackThread.start();
     }
 
+    // Helper method to calculate milliseconds for a tick, considering tempo changes
+    private long ticksToMs(long tick, List<TempoEvent> tempoEvents, int ticksPerQuarterNote) {
+        if (tempoEvents.isEmpty()) {
+            // Default tempo
+            return (long)((tick * 500000.0f) / (ticksPerQuarterNote * 1000.0f));
+        }
+
+        long ms = 0;
+        long lastTick = 0;
+        float currentMpqn = 500000.0f; // Default 120 BPM
+
+        // Find all tempo changes before this tick
+        for (TempoEvent event : tempoEvents) {
+            if (event.tick < tick) {
+                // Calculate ms for the segment using the previous tempo
+                ms += ((event.tick - lastTick) * currentMpqn) / (ticksPerQuarterNote * 1000.0f);
+                lastTick = event.tick;
+                currentMpqn = event.mpqn;
+            } else {
+                break; // No need to check further tempo events
+            }
+        }
+
+        // Add remaining time using current tempo
+        ms += ((tick - lastTick) * currentMpqn) / (ticksPerQuarterNote * 1000.0f);
+
+        return ms;
+    }
+
     @Override
     protected void onDestroy() {
         if (isPlaying.get()) {
@@ -379,6 +595,16 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
         Command(long timestamp, String command) {
             this.timestamp = timestamp;
             this.command = command;
+        }
+    }
+
+    private static class TempoEvent {
+        long tick;
+        float mpqn;  // Microseconds per quarter note
+
+        TempoEvent(long tick, float mpqn) {
+            this.tick = tick;
+            this.mpqn = mpqn;
         }
     }
 }
