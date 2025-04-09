@@ -82,6 +82,7 @@
                 android:layout_height="wrap_content"
                 android:text="Main Wave:"
                 android:textSize="16sp"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginEnd="8dp"/>
 
             <Spinner
@@ -95,6 +96,7 @@
                 android:layout_height="wrap_content"
                 android:text="Sub Wave:"
                 android:textSize="16sp"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginEnd="8dp"/>
 
             <Spinner
@@ -103,52 +105,57 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <!-- Filter, Detune and Reverb Knobs -->
+        <!-- Preset Controls -->
+        <LinearLayout
+            android:id="@+id/presetContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:padding="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preset:"
+                android:textColor="?android:attr/textColorPrimary"
+                android:layout_marginEnd="8dp" />
+
+            <Spinner
+                android:id="@+id/presetSpinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="48dp" />
+
+            <Button
+                android:id="@+id/loadPresetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Load"
+                android:layout_marginStart="4dp"/>
+
+            <Button
+                android:id="@+id/savePresetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:layout_marginStart="4dp"/>
+        </LinearLayout>
+
+        <!-- All Controls in one row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
-            <!-- Add this to your landscape layout -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="4dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Preset:"
-                    android:layout_marginEnd="8dp" />
-
-                <Spinner
-                    android:id="@+id/presetSpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:minHeight="48dp" />
-
-                <Button
-                    android:id="@+id/loadPresetButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Load"
-                    android:layout_marginStart="4dp"/>
-
-                <Button
-                    android:id="@+id/savePresetButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Save"
-                    android:layout_marginStart="4dp"/>
-            </LinearLayout>
             <com.rejowan.rotaryknob.RotaryKnob
                 android:id="@+id/filterKnob"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="4dp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_margin="3dp"
                 app:label_text="Filter"
                 app:label_text_style="bold"
                 app:max="255"
@@ -156,18 +163,98 @@
 
             <com.rejowan.rotaryknob.RotaryKnob
                 android:id="@+id/detuneKnob"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="4dp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_margin="3dp"
                 app:label_text="Detune"
                 app:label_text_style="bold"
                 app:max="255"
                 app:min="0" />
 
+            <com.rejowan.rotaryknob.RotaryKnob
+                android:id="@+id/vibRateKnob"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_margin="3dp"
+                app:label_text="Vib Rate"
+                app:label_text_style="bold"
+                app:max="255"
+                app:min="0" />
+
+            <com.rejowan.rotaryknob.RotaryKnob
+                android:id="@+id/vibDepthKnob"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_margin="3dp"
+                app:label_text="Vib Depth"
+                app:label_text_style="bold"
+                app:max="255"
+                app:min="0" />
+
+            <!-- Compact panic and octave controls -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/panicButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="PANIC"
+                    android:textSize="11sp"
+                    android:backgroundTint="#FF0000"
+                    android:textColor="#FFFFFF"
+                    app:rippleColor="#CC0000"
+                    android:layout_marginBottom="3dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/octaveDownButton"
+                        android:layout_width="40dp"
+                        android:layout_height="36dp"
+                        android:text="−"
+                        android:textSize="16sp"
+                        android:padding="0dp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:backgroundTint="#333333"
+                        app:rippleColor="#666666" />
+
+                    <TextView
+                        android:id="@+id/octaveTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="OCT:5"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginEnd="3dp" />
+
+                    <Button
+                        android:id="@+id/octaveUpButton"
+                        android:layout_width="40dp"
+                        android:layout_height="36dp"
+                        android:text="+"
+                        android:textSize="16sp"
+                        android:padding="0dp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:backgroundTint="#333333"
+                        app:rippleColor="#666666" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Piano View in the middle (not full height) -->
+    <!-- Piano View -->
     <com.convergencelabstfx.pianoview.PianoView
         android:id="@+id/pianoView"
         android:layout_width="0dp"
@@ -179,93 +266,10 @@
         app:keyStrokeColor="@color/keyStrokeColor"
         app:keyStrokeWidth="1dp"
         app:layout_constraintTop_toBottomOf="@id/topControlsContainer"
-        app:layout_constraintBottom_toTopOf="@id/bottomControlsContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/adsrKnobContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:numberOfKeys="36"
         app:whiteKeyColor="@color/whiteKeyColor" />
-
-    <!-- Bottom container for vibrato and octave controls -->
-    <LinearLayout
-        android:id="@+id/bottomControlsContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="8dp"
-        android:background="#EEEEEE"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/adsrKnobContainer"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.rejowan.rotaryknob.RotaryKnob
-            android:id="@+id/vibRateKnob"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:layout_margin="4dp"
-            app:label_text="Vib Rate"
-            app:label_text_style="bold"
-            app:max="255"
-            app:min="0" />
-
-        <com.rejowan.rotaryknob.RotaryKnob
-            android:id="@+id/vibDepthKnob"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:layout_margin="4dp"
-            app:label_text="Vib Depth"
-            app:label_text_style="bold"
-            app:max="255"
-            app:min="0" />
-
-        <!-- Panic button to match portrait style -->
-        <Button
-            android:id="@+id/panicButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="PANIC"
-            android:textSize="14sp"
-            android:backgroundTint="#FF0000"
-            android:textColor="#FFFFFF"
-            app:rippleColor="#CC0000"
-            android:layout_marginEnd="8dp" />
-
-        <!-- Octave controls to match portrait style -->
-        <Button
-            android:id="@+id/octaveDownButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:text="−"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#333333"
-            app:rippleColor="#666666" />
-
-        <TextView
-            android:id="@+id/octaveTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OCT: 5"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp" />
-
-        <Button
-            android:id="@+id/octaveUpButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:text="+"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#333333"
-            app:rippleColor="#666666" />
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
