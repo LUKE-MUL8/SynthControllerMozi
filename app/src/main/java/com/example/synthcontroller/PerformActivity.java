@@ -1,12 +1,15 @@
 package com.example.synthcontroller;
 
+import android.app.AlertDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,10 +27,17 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.rejowan.rotaryknob.RotaryKnob;
 
+import java.util.List;
+
 public class PerformActivity extends AppCompatActivity {
     private static final String TAG = "PerformActivity";
     private PianoView pianoView;
     private TextView octaveTextView;
+
+    private PresetManager presetManager;
+    private Spinner presetSpinner;
+    private Button savePresetButton;
+    private Button loadPresetButton;
 
     // Define the starting MIDI note and octave
     private int midiNoteOffset = 48; // C3
@@ -37,6 +47,8 @@ public class PerformActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perform);
+
+
 
         // Initialize piano and other controls
         pianoView = findViewById(R.id.pianoView);
@@ -62,7 +74,37 @@ public class PerformActivity extends AppCompatActivity {
         setupTabLayout();
 
         setupLandscapeControls();
+        setupPresetControls();
+    }
 
+    private void setupPresetControls() {
+        presetManager = new PresetManager(this);
+
+        presetSpinner = findViewById(R.id.presetSpinner);
+        savePresetButton = findViewById(R.id.savePresetButton);
+        loadPresetButton = findViewById(R.id.loadPresetButton);
+
+        Log.d(TAG, "Preset controls: " +
+                "spinner=" + (presetSpinner != null) +
+                ", saveBtn=" + (savePresetButton != null) +
+                ", loadBtn=" + (loadPresetButton != null));
+
+        // Check if the views are found (they might be null in some layouts)
+        if (presetSpinner != null && savePresetButton != null && loadPresetButton != null) {
+            updatePresetSpinner();
+
+            savePresetButton.setOnClickListener(v -> {
+                Log.d(TAG, "Save preset button clicked");
+                showSavePresetDialog();
+            });
+
+            loadPresetButton.setOnClickListener(v -> {
+                Log.d(TAG, "Load preset button clicked");
+                loadSelectedPreset();
+            });
+        } else {
+            Log.e(TAG, "Some preset controls are missing in the layout");
+        }
     }
 
     private void setupPianoView() {
@@ -146,6 +188,299 @@ public class PerformActivity extends AppCompatActivity {
         sendCommand("OCTAVE:", currentOctave - 4); // Octave offset from middle C
     }
 
+    private void updatePresetSpinner() {
+        List<String> presetNames = presetManager.getPresetNames();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, presetNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        presetSpinner.setAdapter(adapter);
+    }
+
+    private void showSavePresetDialog() {
+        Log.d(TAG, "Showing save preset dialog");
+
+        // Use LayoutInflater to create a proper dialog view
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_save_preset, null);
+        EditText input = dialogView.findViewById(R.id.presetNameInput);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Save Preset")
+                .setView(dialogView)
+                .setPositiveButton("Save", null) // Set to null initially
+                .setNegativeButton("Cancel", (d, which) -> d.dismiss())
+                .create();
+
+        dialog.show();
+
+        // Set button click listeners after dialog is shown
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener(v -> {
+            String presetName = input.getText().toString().trim();
+            if (presetName.isEmpty()) {
+                input.setError("Please enter a name");
+            } else {
+                Log.d(TAG, "Saving preset with name: " + presetName);
+                saveCurrentPreset(presetName);
+                dialog.dismiss();
+            }
+        });
+    }
+
+
+    public void saveCurrentPreset(String name) {
+        Log.d(TAG, "Saving preset with name: " + name);
+
+        // Create preset from current values
+        SynthPreset preset = new SynthPreset();
+        preset.setName(name);
+
+        try {
+            // Get waveform selections from the tab
+            WaveformFragment waveformFragment = getWaveformFragment();
+            if (waveformFragment != null) {
+                preset.setMainWaveform(waveformFragment.getMainWaveformPosition());
+                preset.setSubWaveform(waveformFragment.getSubWaveformPosition());
+            }
+
+            // Get ADSR values from the tab
+            AdsrFragment adsrFragment = getAdsrFragment();
+            if (adsrFragment != null) {
+                preset.setAttack(adsrFragment.getAttackValue());
+                preset.setDecay(adsrFragment.getDecayValue());
+                preset.setSustain(adsrFragment.getSustainValue());
+                preset.setRelease(adsrFragment.getReleaseValue());
+            }
+
+            // Get Effects values from the tab
+            EffectsFragment effectsFragment = getEffectsFragment();
+            if (effectsFragment != null) {
+                preset.setFilter(effectsFragment.getFilterValue());
+                preset.setDetune(effectsFragment.getDetuneValue());
+                preset.setVibRate(effectsFragment.getVibRateValue());
+                preset.setVibDepth(effectsFragment.getVibDepthValue());
+            }
+
+            // Save octave setting
+            preset.setOctave(currentOctave);
+
+            // Save preset
+            if (presetManager == null) {
+                presetManager = new PresetManager(this);
+            }
+            presetManager.savePreset(preset);
+
+            // Update UI
+            if (presetSpinner != null) {
+                updatePresetSpinner();
+                // Select the saved preset in the spinner
+                int index = getPresetIndex(name);
+                if (index >= 0 && index < presetSpinner.getAdapter().getCount()) {
+                    presetSpinner.setSelection(index);
+                }
+            }
+
+            Toast.makeText(this, "Preset saved: " + name, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e(TAG, "Error saving preset", e);
+            Toast.makeText(this, "Error saving preset", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+    public void loadPresetByName(String presetName) {
+        if (presetManager == null) {
+            presetManager = new PresetManager(this);
+        }
+
+        SynthPreset preset = presetManager.getPreset(presetName);
+        if (preset == null) {
+            Toast.makeText(this, "Preset not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Send parameters to the synth
+        sendCommand("MAIN_WAVE:", preset.getMainWaveform());
+        sendCommand("SUB_WAVE:", preset.getSubWaveform());
+        sendCommand("ATTACK:", preset.getAttack());
+        sendCommand("DECAY:", preset.getDecay());
+        sendCommand("SUSTAIN:", preset.getSustain());
+        sendCommand("RELEASE:", preset.getRelease());
+        sendCommand("FILTER:", preset.getFilter());
+        sendCommand("DETUNE:", preset.getDetune());
+        sendCommand("VIB_RATE:", preset.getVibRate());
+        sendCommand("VIB_DEPTH:", preset.getVibDepth());
+
+        // Update UI to reflect loaded values
+        updateUIFromPreset(preset);
+
+        Toast.makeText(this, "Preset loaded: " + presetName, Toast.LENGTH_SHORT).show();
+    }
+
+    private WaveformFragment getWaveformFragment() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            TabLayout tabLayout = findViewById(R.id.tabLayout);
+            ViewPager2 viewPager = findViewById(R.id.viewPager);
+
+            if (tabLayout != null && viewPager != null) {
+                SynthPagerAdapter adapter = (SynthPagerAdapter) viewPager.getAdapter();
+                if (adapter != null) {
+                    return (WaveformFragment) getSupportFragmentManager()
+                            .findFragmentByTag("f" + adapter.getItemId(1));  // Changed from 3 to 1
+                }
+            }
+        }
+        return null;
+    }
+
+    private AdsrFragment getAdsrFragment() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            TabLayout tabLayout = findViewById(R.id.tabLayout);
+            ViewPager2 viewPager = findViewById(R.id.viewPager);
+
+            if (tabLayout != null && viewPager != null) {
+                SynthPagerAdapter adapter = (SynthPagerAdapter) viewPager.getAdapter();
+                if (adapter != null) {
+                    return (AdsrFragment) getSupportFragmentManager()
+                            .findFragmentByTag("f" + adapter.getItemId(2));  // Changed from 0 to 2
+                }
+            }
+        }
+        return null;
+    }
+
+    private EffectsFragment getEffectsFragment() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            TabLayout tabLayout = findViewById(R.id.tabLayout);
+            ViewPager2 viewPager = findViewById(R.id.viewPager);
+
+            if (tabLayout != null && viewPager != null) {
+                SynthPagerAdapter adapter = (SynthPagerAdapter) viewPager.getAdapter();
+                if (adapter != null) {
+                    return (EffectsFragment) getSupportFragmentManager()
+                            .findFragmentByTag("f" + adapter.getItemId(3));  // Changed from 1 to 3
+                }
+            }
+        }
+        return null;
+    }
+
+    private void saveKnobValueToPreset(SynthPreset preset, int knobId, String knobName) {
+        RotaryKnob knob = findViewById(knobId);
+        if (knob != null) {
+            int value = knob.getCurrentProgress();
+            Log.d(TAG, knobName + " value: " + value);
+
+            switch (knobName) {
+                case "Attack": preset.setAttack(value); break;
+                case "Decay": preset.setDecay(value); break;
+                case "Sustain": preset.setSustain(value); break;
+                case "Release": preset.setRelease(value); break;
+                case "Filter": preset.setFilter(value); break;
+                case "Detune": preset.setDetune(value); break;
+                case "VibRate": preset.setVibRate(value); break;
+                case "VibDepth": preset.setVibDepth(value); break;
+            }
+        }
+    }
+
+    private int getPresetIndex(String name) {
+        List<String> presetNames = presetManager.getPresetNames();
+        for (int i = 0; i < presetNames.size(); i++) {
+            if (presetNames.get(i).equals(name)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private void loadSelectedPreset() {
+        if (presetSpinner.getSelectedItem() == null) {
+            Toast.makeText(this, "No preset selected", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String presetName = presetSpinner.getSelectedItem().toString();
+        SynthPreset preset = presetManager.getPreset(presetName);
+
+        if (preset == null) {
+            Toast.makeText(this, "Preset not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Send parameters to the synth
+        sendCommand("MAIN_WAVE:", preset.getMainWaveform());
+        sendCommand("SUB_WAVE:", preset.getSubWaveform());
+        sendCommand("ATTACK:", preset.getAttack());
+        sendCommand("DECAY:", preset.getDecay());
+        sendCommand("SUSTAIN:", preset.getSustain());
+        sendCommand("RELEASE:", preset.getRelease());
+        sendCommand("FILTER:", preset.getFilter());
+        sendCommand("DETUNE:", preset.getDetune());
+        sendCommand("VIB_RATE:", preset.getVibRate());
+        sendCommand("VIB_DEPTH:", preset.getVibDepth());
+
+        // Update UI to reflect loaded values
+        updateUIFromPreset(preset);
+
+        Toast.makeText(this, "Preset loaded: " + presetName, Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateUIFromPreset(SynthPreset preset) {
+        // Update waveform fragment
+        WaveformFragment waveformFragment = getWaveformFragment();
+        if (waveformFragment != null) {
+            waveformFragment.updateWaveformSelections(preset.getMainWaveform(), preset.getSubWaveform());
+        }
+
+        // Update ADSR fragment
+        AdsrFragment adsrFragment = getAdsrFragment();
+        if (adsrFragment != null) {
+            adsrFragment.updateAdsrValues(preset.getAttack(), preset.getDecay(),
+                    preset.getSustain(), preset.getRelease());
+        }
+
+        // Update Effects fragment
+        EffectsFragment effectsFragment = getEffectsFragment();
+        if (effectsFragment != null) {
+            effectsFragment.updateEffectValues(preset.getFilter(), preset.getDetune(),
+                    preset.getVibRate(), preset.getVibDepth());
+        }
+
+        // Update landscape controls if available
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            updateSpinnerIfExists(R.id.mainWaveSpinner, preset.getMainWaveform());
+            updateSpinnerIfExists(R.id.subWaveSpinner, preset.getSubWaveform());
+            updateKnobIfExists(R.id.attackKnob, preset.getAttack());
+            updateKnobIfExists(R.id.decayKnob, preset.getDecay());
+            updateKnobIfExists(R.id.sustainKnob, preset.getSustain());
+            updateKnobIfExists(R.id.releaseKnob, preset.getRelease());
+            updateKnobIfExists(R.id.filterKnob, preset.getFilter());
+            updateKnobIfExists(R.id.detuneKnob, preset.getDetune());
+            updateKnobIfExists(R.id.vibRateKnob, preset.getVibRate());
+            updateKnobIfExists(R.id.vibDepthKnob, preset.getVibDepth());
+        }
+
+        // Update octave
+        currentOctave = preset.getOctave();
+        updateOctaveDisplay();
+    }
+
+    private void updateKnobIfExists(int id, int value) {
+        RotaryKnob knob = findViewById(id);
+        if (knob != null) {
+            knob.setCurrentProgress(value);
+        }
+    }
+
+    private void updateSpinnerIfExists(int id, int position) {
+        Spinner spinner = findViewById(id);
+        if (spinner != null && position >= 0 && position < spinner.getCount()) {
+            spinner.setSelection(position);
+        }
+    }
+
+
     private void setupTabLayout() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             TabLayout tabLayout = findViewById(R.id.tabLayout);
@@ -158,14 +493,15 @@ public class PerformActivity extends AppCompatActivity {
                 // Use FragmentStateAdapter with FragmentActivity
                 viewPager.setAdapter(new SynthPagerAdapter(this));
 
-                // Connect TabLayout with ViewPager2
+
                 new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
                     switch (position) {
-                        case 0: tab.setText("ADSR"); break;
-                        case 1: tab.setText("Effects"); break;
-                        case 2: tab.setText("Waveform"); break;
+                        case 0: tab.setText("Presets"); break;  // Added this tab
+                        case 1: tab.setText("Waveform"); break;
+                        case 2: tab.setText("ADSR"); break;
+                        case 3: tab.setText("Effects"); break;
                     }
-                }).attach();
+                }).attach();;
             } else {
                 Log.e(TAG, "ViewPager2 is null");
             }
@@ -182,17 +518,18 @@ public class PerformActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return 3;
+            return 4;
         }
 
         @NonNull
         @Override
         public Fragment createFragment(int position) {
             switch (position) {
-                case 0: return new AdsrFragment();
-                case 1: return new EffectsFragment();
-                case 2: return new WaveformFragment();
-                default: return new AdsrFragment();
+                case 0: return new PresetFragment();
+                case 1: return new WaveformFragment();  // Changed order
+                case 2: return new AdsrFragment();      // Changed order
+                case 3: return new EffectsFragment();   // Changed order
+                default: return new PresetFragment();
             }
         }
     }
@@ -300,7 +637,6 @@ public class PerformActivity extends AppCompatActivity {
         // Find effects knobs in landscape layout
         RotaryKnob filterKnob = findViewById(R.id.filterKnob);
         RotaryKnob detuneKnob = findViewById(R.id.detuneKnob);
-        RotaryKnob reverbKnob = findViewById(R.id.reverbKnob);
         RotaryKnob vibRateKnob = findViewById(R.id.vibRateKnob);
         RotaryKnob vibDepthKnob = findViewById(R.id.vibDepthKnob);
 
@@ -321,13 +657,6 @@ public class PerformActivity extends AppCompatActivity {
                     sendCommand("DETUNE:", progress));
         }
 
-        if (reverbKnob != null) {
-            reverbKnob.setMin(0);
-            reverbKnob.setMax(255);
-            reverbKnob.setCurrentProgress(0);
-            reverbKnob.setProgressChangeListener(progress ->
-                    sendCommand("REVERB:", progress));
-        }
 
         if (vibRateKnob != null) {
             vibRateKnob.setMin(0);

@@ -56,4 +56,24 @@ public class WaveformFragment extends Fragment {
 
         return view;
     }
+
+    // Add these getter methods for preset functionality
+    public int getMainWaveformPosition() {
+        return mainWaveSpinner != null ? mainWaveSpinner.getSelectedItemPosition() : 0;
+    }
+
+    public int getSubWaveformPosition() {
+        return subWaveSpinner != null ? subWaveSpinner.getSelectedItemPosition() : 1;
+    }
+
+    // Method to update UI when loading presets
+    public void updateWaveformSelections(int mainPosition, int subPosition) {
+        if (mainWaveSpinner != null && mainPosition >= 0 && mainPosition < waveforms.length) {
+            mainWaveSpinner.setSelection(mainPosition);
+        }
+
+        if (subWaveSpinner != null && subPosition >= 0 && subPosition < waveforms.length) {
+            subWaveSpinner.setSelection(subPosition);
+        }
+    }
 }
