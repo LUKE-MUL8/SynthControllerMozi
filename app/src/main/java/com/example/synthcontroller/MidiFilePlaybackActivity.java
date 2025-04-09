@@ -135,7 +135,6 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
         // Find effects knobs in layout
         RotaryKnob filterKnob = findViewById(R.id.filterKnob);
         RotaryKnob detuneKnob = findViewById(R.id.detuneKnob);
-        RotaryKnob reverbKnob = findViewById(R.id.reverbKnob);
         RotaryKnob vibRateKnob = findViewById(R.id.vibRateKnob);
         RotaryKnob vibDepthKnob = findViewById(R.id.vibDepthKnob);
 
@@ -154,14 +153,6 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
             detuneKnob.setCurrentProgress(0);
             detuneKnob.setProgressChangeListener(progress ->
                     sendCommand("DETUNE:", progress));
-        }
-
-        if (reverbKnob != null) {
-            reverbKnob.setMin(0);
-            reverbKnob.setMax(255);
-            reverbKnob.setCurrentProgress(0);
-            reverbKnob.setProgressChangeListener(progress ->
-                    sendCommand("REVERB:", progress));
         }
 
         if (vibRateKnob != null) {

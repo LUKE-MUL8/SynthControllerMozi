@@ -130,15 +130,6 @@
                 app:max="255"
                 app:min="0" />
 
-            <com.rejowan.rotaryknob.RotaryKnob
-                android:id="@+id/reverbKnob"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="4dp"
-                app:label_text="Reverb"
-                app:label_text_style="bold"
-                app:max="255"
-                app:min="0" />
         </LinearLayout>
     </LinearLayout>
 
