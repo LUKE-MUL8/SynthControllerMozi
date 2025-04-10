@@ -12,7 +12,7 @@ Bluetooth control for live modulation index adjustment.
 Smooth MIDI note transitions with customizable octaves on an on screen keyboard with optional horizonal or portrait view.
 Requirements
 ESP32 (or compatible)
-Speaker/ audx lead (64-ohm or similar)
+Speaker/ aux lead (64-ohm or similar)
 headphone jack module. ( I used [this](https://www.amazon.com/Onyehn-Breakout-Stereo-Headphone-Arduino/dp/B07L3P93ZD?crid=3U1P5G5C1RPX1&dib=eyJ2IjoiMSJ9.16_bxuKGtxC3N7N542JPvuOkqX_mjVk4FWJPMIaGTYOVujmb4fNn88lOGWL6B_15k6EJR-VCcBrF5nQB7Y4eHyXaaGrBIviXSc1qNkBMGgmBBgoom_OAEpAsbdmp1kTJj10Epz6iU93wDfsLV9lmX26XbT5f-UFQPoRzfjxnEGzEtV-K9TMpdr5c-9CXICYCzzi9ABXgkH0Gspmm_LpyMdDOSKSfdpkN2yy8bnX9UBk.J3T0CNXuFjwoh1wGMnQqQvaT5fhesqactNGbheZl-gE&dib_tag=se&keywords=jack+module+for+arduino&qid=1741098241&sprefix=jack+module+for+arduino,aps,214&sr=8-1) )
 
 Bluetooth module or on board bluetooth (e.g., HC-02)
