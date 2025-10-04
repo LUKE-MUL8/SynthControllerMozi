@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">SynthController</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cd_piano">Piano</string>
+    <string name="cd_perform">Perform and change sound</string>
+    <string name="cd_play_midi">Play MIDI</string>
+    <string name="cd_kill_bt">Kill Bluetooth</string>
+    <string name="cd_settings">Settings and info</string>
+    <string name="cd_chevron">Open</string>
+
 </resources>

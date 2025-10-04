@@ -1,86 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/slate_900">
 
-    <Button
-        android:id="@+id/setting_info_button"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:text="Settings and info"
-        android:textSize="18sp"
-        app:icon="@drawable/baseline_settings_24"
-        app:iconSize="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/midi_button"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/appTitle"
-        android:layout_width="353dp"
-        android:layout_height="93dp"
-        android:fontFamily="@font/assistant_extrabold"
-        android:text="Mozzi Synthesizer Controller"
-        android:textSize="34sp"
-        android:textStyle="bold"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.078" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/navigate_button"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="88dp"
-        android:backgroundTint="@color/design_default_color_primary"
-        android:text="Perform &amp; change sound"
-        android:textColor="@color/design_default_color_on_primary"
-        android:textSize="18sp"
-        app:icon="@drawable/baseline_piano_24"
-        app:iconSize="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/midi_button"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="48dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="24dp">
 
-    <Button
-        android:id="@+id/kill_bluetooth_button"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:text="Kill Bluetooth"
-        android:textSize="18sp"
-        app:icon="@drawable/baseline_bluetooth_disabled_24"
-        app:iconSize="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/setting_info_button"
-        app:layout_constraintStart_toStartOf="@id/midi_button"
-        app:layout_constraintTop_toBottomOf="@id/midi_button"
-        app:layout_constraintVertical_bias="0.0" />
+            <FrameLayout
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_circle_slate_800">
 
-    <Button
-        android:id="@+id/midi_button"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="88dp"
-        android:backgroundTint="@color/design_default_color_primary"
-        android:text="Play MIDI"
-        android:textColor="@color/design_default_color_on_primary"
-        android:textSize="18sp"
-        app:icon="@drawable/baseline_queue_music_24"
-        app:iconSize="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/navigate_button" />
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/cd_piano"
+                    android:src="@drawable/baseline_piano_24"
+                    app:tint="@color/primary_400" />
+            </FrameLayout>
 
+            <TextView
+                android:id="@+id/appTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_font_family"
+                android:text="Mozzi Synthesizer"
+                android:textColor="@color/slate_50"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="24dp"
+                android:fontFamily="@font/inter"
+                android:text="Controller"
+                android:textColor="@color/slate_400"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/row_perform"
+                layout="@layout/item_action_row"
+                app:chevronTint="@color/slate_500"
+                app:iconSrc="@drawable/ic_graphic_eq"
+                app:iconTint="@color/primary_400"
+                app:textColor="@color/slate_50"
+                app:textLabel="Perform &amp; change sound" />
+
+            <include
+                android:id="@+id/row_midi"
+                layout="@layout/item_action_row"
+                android:layout_marginTop="16dp"
+                app:chevronTint="@color/slate_500"
+                app:iconSrc="@drawable/baseline_queue_music_24"
+                app:iconTint="@color/primary_400"
+                app:textColor="@color/slate_50"
+                app:textLabel="Play MIDI" />
+
+            <include
+                android:id="@+id/row_kill_bt"
+                layout="@layout/item_action_row_red"
+                android:layout_marginTop="16dp"
+                app:iconSrc="@drawable/baseline_bluetooth_disabled_24"
+                app:iconTint="@color/red_400"
+                app:textLabel="Kill Bluetooth" />
+
+            <include
+                android:id="@+id/row_settings"
+                layout="@layout/item_action_row"
+                android:layout_marginTop="16dp"
+                app:chevronTint="@color/slate_500"
+                app:iconSrc="@drawable/baseline_settings_24"
+                app:iconTint="@color/primary_400"
+                app:textColor="@color/slate_50"
+                app:textLabel="Settings and info" />
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

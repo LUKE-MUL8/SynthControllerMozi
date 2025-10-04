@@ -24,8 +24,7 @@ public class AdsrFragment extends Fragment {
             attackKnob.setMin(0);
             attackKnob.setMax(255);
             attackKnob.setCurrentProgress(50);
-            attackKnob.setProgressChangeListener(progress ->
-                    ((PerformActivity)getActivity()).sendCommand("ATTACK:", progress));
+            attackKnob.setProgressChangeListener(this::sendAttackCommand);
         }
 
         // Configure decay knob
@@ -33,8 +32,7 @@ public class AdsrFragment extends Fragment {
             decayKnob.setMin(0);
             decayKnob.setMax(255);
             decayKnob.setCurrentProgress(100);
-            decayKnob.setProgressChangeListener(progress ->
-                    ((PerformActivity)getActivity()).sendCommand("DECAY:", progress));
+            decayKnob.setProgressChangeListener(this::sendDecayCommand);
         }
 
         // Configure sustain knob
@@ -42,8 +40,7 @@ public class AdsrFragment extends Fragment {
             sustainKnob.setMin(0);
             sustainKnob.setMax(255);
             sustainKnob.setCurrentProgress(180);
-            sustainKnob.setProgressChangeListener(progress ->
-                    ((PerformActivity)getActivity()).sendCommand("SUSTAIN:", progress));
+            sustainKnob.setProgressChangeListener(this::sendSustainCommand);
         }
 
         // Configure release knob
@@ -51,8 +48,7 @@ public class AdsrFragment extends Fragment {
             releaseKnob.setMin(0);
             releaseKnob.setMax(255);
             releaseKnob.setCurrentProgress(100);
-            releaseKnob.setProgressChangeListener(progress ->
-                    ((PerformActivity)getActivity()).sendCommand("RELEASE:", progress));
+            releaseKnob.setProgressChangeListener(this::sendReleaseCommand);
         }
 
         return view;
@@ -91,6 +87,35 @@ public class AdsrFragment extends Fragment {
 
         if (releaseKnob != null) {
             releaseKnob.setCurrentProgress(release);
+        }
+    }
+
+    // Made protected for testing
+    protected boolean isActivityInstanceOf(Class<?> clazz) {
+        return getActivity() != null && clazz.isInstance(getActivity());
+    }
+
+    public void sendSustainCommand(int value) {
+        if (isActivityInstanceOf(PerformActivity.class)) {
+            ((PerformActivity) getActivity()).sendCommand("SUSTAIN:", value);
+        }
+    }
+
+    public void sendReleaseCommand(int value) {
+        if (isActivityInstanceOf(PerformActivity.class)) {
+            ((PerformActivity) getActivity()).sendCommand("RELEASE:", value);
+        }
+    }
+
+    public void sendAttackCommand(int value) {
+        if (isActivityInstanceOf(PerformActivity.class)) {
+            ((PerformActivity) getActivity()).sendCommand("ATTACK:", value);
+        }
+    }
+
+    public void sendDecayCommand(int value) {
+        if (isActivityInstanceOf(PerformActivity.class)) {
+            ((PerformActivity) getActivity()).sendCommand("DECAY:", value);
         }
     }
 }

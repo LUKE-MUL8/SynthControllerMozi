@@ -9,8 +9,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/inter_font_family"
         android:text="Preset:"
-        android:layout_marginEnd="8dp" />
+        android:textColor="@color/slate_50"
+        android:textStyle="bold" />
 
     <Spinner
         android:id="@+id/presetSpinner"
@@ -23,13 +26,17 @@
         android:id="@+id/loadPresetButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/CircleButtonStyle"
         android:text="Load"
+        android:textColor="@color/slate_50"
         android:layout_marginStart="4dp"/>
 
     <Button
         android:id="@+id/savePresetButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/CircleButtonStyle"
         android:text="Save"
+        android:textColor="@color/slate_50"
         android:layout_marginStart="4dp"/>
 </LinearLayout>

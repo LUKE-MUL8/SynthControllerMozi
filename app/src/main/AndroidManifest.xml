@@ -30,6 +30,7 @@
             android:exported="false" />
         <activity
             android:name=".PerformActivity"
+            android:theme="@style/Theme.SynthController"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

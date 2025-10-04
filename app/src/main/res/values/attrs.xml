@@ -1,0 +1,11 @@
+<resources>
+    <declare-styleable name="ActionRow">
+
+    <attr name="textLabel" format="string" />
+    <attr name="iconSrc" format="reference" />
+    <attr name="iconTint" format="color" />
+    <attr name="chevronTint" format="color" />
+    <attr name="textColor" format="color" />
+
+    </declare-styleable>
+</resources>

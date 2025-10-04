@@ -1,113 +1,166 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/slate_900">
 
-    <!-- Piano View - Now much larger and positioned as the main element -->
-    <com.convergencelabstfx.pianoview.PianoView
-        android:id="@+id/pianoView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHeight_percent="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:numberOfKeys="24"
-        app:enableMultiKeyHighlighting="true"
-        app:keyPressedColor="#673AB7"
-        app:whiteKeyColor="@color/whiteKeyColor"
-        app:blackKeyColor="@color/blackKeyColor"
-        app:keyStrokeColor="@color/keyStrokeColor"
-        app:keyCornerRadius="2dp"
-        app:keyStrokeWidth="1dp" />
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!-- Tab layout for controls -->
+<!--        <Button-->
+<!--            android:id="@+id/menuButton"-->
+<!--            android:layout_width="48dp"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:background="@drawable/baseline_menu_24"-->
+<!--            android:contentDescription="Menu"-->
+<!--            android:tint="@color/slate_50" />-->
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/inter"
+            android:gravity="center"
+            android:text="Synth Controller"
+            android:textColor="@color/slate_50"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/settingsButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/baseline_settings_24"
+            android:contentDescription="Settings"
+            android:tint="@color/slate_50" />
+    </LinearLayout>
+
+    <!-- Tab Layout -->
+
+    <!-- ViewPager2 -->
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/pianoView"
-        app:tabMode="fixed">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:tabIndicatorColor="@color/primary_400"
+        app:tabSelectedTextColor="@color/primary_400"
+        android:background="@color/slate_900"
+        app:tabTextColor="@color/slate_50" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ADSR" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Effects" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Waveform" />
-    </com.google.android.material.tabs.TabLayout>
-
-    <!-- ViewPager for tab content -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/octaveControlContainer"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
-        app:layout_constraintBottom_toTopOf="@id/octaveControlContainer" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp" />
 
     <LinearLayout
         android:id="@+id/octaveControlContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:padding="8dp"
-        android:background="#EEEEEE"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <Button
-            android:id="@+id/panicButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="PANIC"
-            android:textSize="14sp"
-            android:backgroundTint="#FF0000"
-            android:textColor="#FFFFFF"
-            app:rippleColor="#CC0000"
-            android:layout_marginEnd="8dp" />
+        android:background="@color/slate_900"
+        app:layout_constraintBottom_toTopOf="@id/panicButton">
 
         <Button
             android:id="@+id/octaveDownButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            style="@style/CircleButtonStyle"
             android:text="−"
+            android:textColor="@color/slate_50"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#333333"
-            app:rippleColor="#666666" />
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/octaveTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OCT: 5"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/octaveTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="3"
+                android:textColor="@color/slate_50"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/octaveLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="OCTAVE"
+                android:textColor="@color/slate_400"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/octaveUpButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            style="@style/CircleButtonStyle"
             android:text="+"
+            android:textColor="@color/slate_50"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#333333"
-            app:rippleColor="#666666" />
+            android:textStyle="bold" />
     </LinearLayout>
+
+    <!-- Piano View -->
+    <com.convergencelabstfx.pianoview.PianoView
+        android:id="@+id/pianoView"
+        android:layout_width="408dp"
+        android:layout_height="249dp"
+        app:blackKeyColor="@color/black"
+        app:enableMultiKeyHighlighting="true"
+        app:keyCornerRadius="2dp"
+        app:keyPressedColor="@color/primary_400"
+        app:keyStrokeColor="@color/slate_500"
+        app:keyStrokeWidth="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:numberOfKeys="24"
+        app:whiteKeyColor="@color/white" />
+
+    <!-- Panic Button -->
+    <Button
+        android:id="@+id/panicButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/red_500"
+        android:text="PANIC"
+        android:textColor="@color/slate_50"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toTopOf="@id/pianoView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

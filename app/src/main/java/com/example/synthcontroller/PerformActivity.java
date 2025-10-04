@@ -125,7 +125,7 @@ public class PerformActivity extends AppCompatActivity {
         octaveUpButton.setOnClickListener(v -> changeOctave(1));
         octaveDownButton.setOnClickListener(v -> changeOctave(-1));
 
-        updateOctaveDisplay();
+        updateOctaveDisplay(currentOctave); // Pass currentOctave as an argument
     }
 
     private void sendAllNotesOff() {
@@ -158,8 +158,9 @@ public class PerformActivity extends AppCompatActivity {
         adjustPianoSizeBasedOnOrientation();
     }
 
-    private void updateOctaveDisplay() {
-        octaveTextView.setText("Octave: " + currentOctave);
+    private void updateOctaveDisplay(int octave) {
+        TextView octaveTextView = findViewById(R.id.octaveTextView);
+        octaveTextView.setText(String.valueOf(octave)); // Convert integer to string
     }
 
     private void changeOctave(int delta) {
@@ -172,7 +173,7 @@ public class PerformActivity extends AppCompatActivity {
         // Update the MIDI offset
         midiNoteOffset = (currentOctave + 1) * 12; // C(octave+1)
 
-        updateOctaveDisplay();
+        updateOctaveDisplay(currentOctave); // Pass currentOctave as an argument
         sendCommand("OCTAVE:", currentOctave - 4); // Octave offset from middle C
     }
 
@@ -451,7 +452,7 @@ public class PerformActivity extends AppCompatActivity {
 
         // Update octave
         currentOctave = preset.getOctave();
-        updateOctaveDisplay();
+        updateOctaveDisplay(currentOctave);
     }
 
     private void updateKnobIfExists(int id, int value) {
@@ -673,6 +674,132 @@ public class PerformActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save current octave setting
+        outState.putInt("currentOctave", currentOctave);
+
+        // Save synth parameters based on current orientation
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // Save landscape controls
+            saveKnobValueIfExists(outState, R.id.attackKnob, "attackValue");
+            saveKnobValueIfExists(outState, R.id.decayKnob, "decayValue");
+            saveKnobValueIfExists(outState, R.id.sustainKnob, "sustainValue");
+            saveKnobValueIfExists(outState, R.id.releaseKnob, "releaseValue");
+            saveKnobValueIfExists(outState, R.id.filterKnob, "filterValue");
+            saveKnobValueIfExists(outState, R.id.detuneKnob, "detuneValue");
+            saveKnobValueIfExists(outState, R.id.vibRateKnob, "vibRateValue");
+            saveKnobValueIfExists(outState, R.id.vibDepthKnob, "vibDepthValue");
+            saveSpinnerValueIfExists(outState, R.id.mainWaveSpinner, "mainWaveform");
+            saveSpinnerValueIfExists(outState, R.id.subWaveSpinner, "subWaveform");
+        } else {
+            // Save fragment values
+            WaveformFragment waveFragment = getWaveformFragment();
+            if (waveFragment != null) {
+                outState.putInt("mainWaveform", waveFragment.getMainWaveformPosition());
+                outState.putInt("subWaveform", waveFragment.getSubWaveformPosition());
+            }
+
+            AdsrFragment adsrFragment = getAdsrFragment();
+            if (adsrFragment != null) {
+                outState.putInt("attackValue", adsrFragment.getAttackValue());
+                outState.putInt("decayValue", adsrFragment.getDecayValue());
+                outState.putInt("sustainValue", adsrFragment.getSustainValue());
+                outState.putInt("releaseValue", adsrFragment.getReleaseValue());
+            }
+
+            EffectsFragment effectsFragment = getEffectsFragment();
+            if (effectsFragment != null) {
+                outState.putInt("filterValue", effectsFragment.getFilterValue());
+                outState.putInt("detuneValue", effectsFragment.getDetuneValue());
+                outState.putInt("vibRateValue", effectsFragment.getVibRateValue());
+                outState.putInt("vibDepthValue", effectsFragment.getVibDepthValue());
+            }
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Restore octave
+        currentOctave = savedInstanceState.getInt("currentOctave", 3);
+        updateOctaveDisplay(currentOctave);
+
+        // Get all saved values
+        int attackValue = savedInstanceState.getInt("attackValue", 50);
+        int decayValue = savedInstanceState.getInt("decayValue", 100);
+        int sustainValue = savedInstanceState.getInt("sustainValue", 180);
+        int releaseValue = savedInstanceState.getInt("releaseValue", 100);
+        int filterValue = savedInstanceState.getInt("filterValue", 255);
+        int detuneValue = savedInstanceState.getInt("detuneValue", 0);
+        int vibRateValue = savedInstanceState.getInt("vibRateValue", 0);
+        int vibDepthValue = savedInstanceState.getInt("vibDepthValue", 0);
+        int mainWaveform = savedInstanceState.getInt("mainWaveform", 0);
+        int subWaveform = savedInstanceState.getInt("subWaveform", 1);
+
+        // Update UI based on current orientation
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            updateKnobIfExists(R.id.attackKnob, attackValue);
+            updateKnobIfExists(R.id.decayKnob, decayValue);
+            updateKnobIfExists(R.id.sustainKnob, sustainValue);
+            updateKnobIfExists(R.id.releaseKnob, releaseValue);
+            updateKnobIfExists(R.id.filterKnob, filterValue);
+            updateKnobIfExists(R.id.detuneKnob, detuneValue);
+            updateKnobIfExists(R.id.vibRateKnob, vibRateValue);
+            updateKnobIfExists(R.id.vibDepthKnob, vibDepthValue);
+            updateSpinnerIfExists(R.id.mainWaveSpinner, mainWaveform);
+            updateSpinnerIfExists(R.id.subWaveSpinner, subWaveform);
+        } else {
+            // Update fragments
+            WaveformFragment waveFragment = getWaveformFragment();
+            if (waveFragment != null) {
+                waveFragment.updateWaveformSelections(mainWaveform, subWaveform);
+            }
+
+            AdsrFragment adsrFragment = getAdsrFragment();
+            if (adsrFragment != null) {
+                adsrFragment.updateAdsrValues(attackValue, decayValue, sustainValue, releaseValue);
+            }
+
+            EffectsFragment effectsFragment = getEffectsFragment();
+            if (effectsFragment != null) {
+                effectsFragment.updateEffectValues(filterValue, detuneValue, vibRateValue, vibDepthValue);
+            }
+        }
+
+        // Send all parameters to the ESP32
+        sendCommand("MAIN_WAVE:", mainWaveform);
+        sendCommand("SUB_WAVE:", subWaveform);
+        sendCommand("ATTACK:", attackValue);
+        sendCommand("DECAY:", decayValue);
+        sendCommand("SUSTAIN:", sustainValue);
+        sendCommand("RELEASE:", releaseValue);
+        sendCommand("FILTER:", filterValue);
+        sendCommand("DETUNE:", detuneValue);
+        sendCommand("VIB_RATE:", vibRateValue);
+        sendCommand("VIB_DEPTH:", vibDepthValue);
+        sendCommand("OCTAVE:", currentOctave - 4);
+    }
+
+    // Helper method to save knob values
+    private void saveKnobValueIfExists(Bundle outState, int knobId, String key) {
+        RotaryKnob knob = findViewById(knobId);
+        if (knob != null) {
+            outState.putInt(key, knob.getCurrentProgress());
+        }
+    }
+
+    // Helper method to save spinner values
+    private void saveSpinnerValueIfExists(Bundle outState, int spinnerId, String key) {
+        Spinner spinner = findViewById(spinnerId);
+        if (spinner != null) {
+            outState.putInt(key, spinner.getSelectedItemPosition());
+        }
+    }
 
     @Override
     protected void onDestroy() {

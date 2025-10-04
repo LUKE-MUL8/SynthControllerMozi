@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/slate_800">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <!-- Left icon -->
+        <ImageView
+            android:id="@+id/row_icon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/baseline_queue_music_24"
+            android:contentDescription="@null"
+            app:tint="@color/primary_400" />
+
+        <!-- Label -->
+        <TextView
+            android:id="@+id/row_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:text="Default Label"
+            android:textSize="16sp"
+            android:textColor="@color/slate_50"
+            android:fontFamily="@font/inter"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:singleLine="true" />
+
+        <!-- Chevron (right arrow) -->
+        <ImageView
+            android:id="@+id/row_chevron"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_chevron_right"
+            android:contentDescription="@null"
+            app:tint="@color/slate_500" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

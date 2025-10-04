@@ -6,13 +6,16 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.card.MaterialCardView;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 100;
@@ -22,26 +25,64 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button navigateButton = findViewById(R.id.navigate_button);
-        Button midiButton = findViewById(R.id.midi_button);
-        Button killBluetoothButton = findViewById(R.id.kill_bluetooth_button);
+        // Correct the type from Button to MaterialCardView
+        MaterialCardView performCard = findViewById(R.id.row_perform);
+        MaterialCardView midiCard = findViewById(R.id.row_midi);
+        MaterialCardView killBluetoothCard = findViewById(R.id.row_kill_bt);
+        MaterialCardView settingsCard = findViewById(R.id.row_settings);
 
-        navigateButton.setOnClickListener(v -> {
+
+        // Find the views inside the PERFORM card and set them
+        ImageView performIcon = performCard.findViewById(R.id.row_icon);
+        TextView performText = performCard.findViewById(R.id.row_text);
+        performIcon.setImageResource(R.drawable.ic_graphic_eq);
+        performIcon.setColorFilter(ContextCompat.getColor(this, R.color.primary_400));
+        performText.setText("Perform & change sound");
+
+        // Find the views inside the MIDI card and set them
+        ImageView midiIcon = midiCard.findViewById(R.id.row_icon);
+        TextView midiText = midiCard.findViewById(R.id.row_text);
+        midiIcon.setImageResource(R.drawable.baseline_queue_music_24);
+        midiIcon.setColorFilter(ContextCompat.getColor(this, R.color.primary_400));
+        midiText.setText("Play MIDI");
+
+        // Find the views inside the KILL BLUETOOTH card and set them
+        ImageView killBtIcon = killBluetoothCard.findViewById(R.id.row_icon);
+        TextView killBtText = killBluetoothCard.findViewById(R.id.row_text);
+        killBtIcon.setImageResource(R.drawable.baseline_bluetooth_disabled_24);
+        killBtIcon.setColorFilter(ContextCompat.getColor(this, R.color.red_400));
+        killBtText.setText("Kill Bluetooth");
+
+        // Find the views inside the SETTINGS card and set them
+        ImageView settingsIcon = settingsCard.findViewById(R.id.row_icon);
+        TextView settingsText = settingsCard.findViewById(R.id.row_text);
+        settingsIcon.setImageResource(R.drawable.baseline_settings_24);
+        settingsIcon.setColorFilter(ContextCompat.getColor(this, R.color.primary_400));
+        settingsText.setText("Settings and info");
+
+        performCard.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, PerformActivity.class);
             startActivity(intent);
         });
 
-        midiButton.setOnClickListener(v -> {
+        midiCard.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, MidiFilePlaybackActivity.class);
             startActivity(intent);
         });
 
-        if (killBluetoothButton != null) {
-            killBluetoothButton.setOnClickListener(v -> {
+        if (killBluetoothCard != null) {
+            killBluetoothCard.setOnClickListener(v -> {
                 BluetoothManager.getInstance().disconnect();
                 Toast.makeText(this, "Bluetooth disconnected", Toast.LENGTH_SHORT).show();
             });
         }
+
+        // Add a click listener for the settings card
+        settingsCard.setOnClickListener(v -> {
+            // Handle settings click here, e.g., start a new activity
+            // Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            // startActivity(intent);
+        });
 
         checkAndRequestPermissions();
     }
