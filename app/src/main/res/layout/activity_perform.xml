@@ -30,9 +30,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/inter"
+            android:fontFamily="@font/inter_font_family"
             android:gravity="center"
             android:text="Synth Controller"
+            android:textAlignment="center"
+            android:textAllCaps="false"
             android:textColor="@color/slate_50"
             android:textSize="34sp"
             android:textStyle="bold" />

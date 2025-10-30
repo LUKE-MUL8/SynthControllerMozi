@@ -180,7 +180,7 @@ public class PerformActivity extends AppCompatActivity {
     private void updatePresetSpinner() {
         List<String> presetNames = presetManager.getPresetNames();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, presetNames);
+                this, R.layout.spinner_item_white_text, presetNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         presetSpinner.setAdapter(adapter);
     }
@@ -555,7 +555,7 @@ public class PerformActivity extends AppCompatActivity {
 
         if (mainWaveSpinner != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, waveforms);
+                    this, R.layout.spinner_item_white_text, waveforms);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
             mainWaveSpinner.setAdapter(adapter);
@@ -573,7 +573,7 @@ public class PerformActivity extends AppCompatActivity {
 
         if (subWaveSpinner != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, waveforms);
+                    this, R.layout.spinner_item_white_text, waveforms);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
             subWaveSpinner.setAdapter(adapter);
