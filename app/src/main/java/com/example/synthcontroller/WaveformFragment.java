@@ -23,7 +23,7 @@ public class WaveformFragment extends Fragment {
         subWaveSpinner = view.findViewById(R.id.subWaveSpinner);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                getActivity(), android.R.layout.simple_spinner_item, waveforms);
+                getActivity(), R.layout.spinner_item_white_text, waveforms);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mainWaveSpinner.setAdapter(adapter);

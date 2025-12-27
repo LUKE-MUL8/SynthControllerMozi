@@ -44,7 +44,7 @@ public class PresetFragment extends Fragment {
 
     private void updatePresetSpinner() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                requireContext(), android.R.layout.simple_spinner_item,
+                requireContext(), R.layout.spinner_item_white_text,
                 presetManager.getPresetNames());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         presetSpinner.setAdapter(adapter);

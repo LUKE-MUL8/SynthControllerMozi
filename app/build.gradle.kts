@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("org.jetbrains.kotlin.android")
 }
+
 
 android {
     namespace = "com.example.synthcontroller"
     compileSdk = 34
-
     defaultConfig {
         applicationId = "com.example.synthcontroller"
         minSdk = 28
@@ -33,6 +34,7 @@ android {
 
 
 dependencies {
+    implementation(project(":rotaryknob"))
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -40,7 +42,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("com.github.ahmmedrejowan:RotaryKnob:0.1")
     implementation("com.github.convergencelab:PianoView:v0.1")
     implementation("com.google.code.gson:gson:2.10.1")
     testImplementation ("androidx.fragment:fragment-testing:1.6.0")

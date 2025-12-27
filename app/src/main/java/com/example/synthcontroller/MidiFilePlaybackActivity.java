@@ -109,7 +109,7 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
     private void updatePresetSpinner(Spinner spinner) {
         List<String> presetNames = presetManager.getPresetNames();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, presetNames);
+                this, R.layout.spinner_item_white_text, presetNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
@@ -336,7 +336,7 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
 
         if (mainWaveSpinner != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, waveforms);
+                    this, R.layout.spinner_item_white_text, waveforms);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
             mainWaveSpinner.setAdapter(adapter);
@@ -359,7 +359,7 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
 
         if (subWaveSpinner != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, waveforms);
+                    this, R.layout.spinner_item_white_text, waveforms);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
             subWaveSpinner.setAdapter(adapter);
