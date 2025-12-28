@@ -52,19 +52,18 @@ public class PresetFragment extends Fragment {
 
     private void showSavePresetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Save Preset");
 
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_save_preset, null);
         EditText input = dialogView.findViewById(R.id.presetNameInput);
+        Button cancelButton = dialogView.findViewById(R.id.cancelButton);
+        Button saveButton = dialogView.findViewById(R.id.saveButton);
 
         builder.setView(dialogView);
-        builder.setPositiveButton("Save", null);
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
         AlertDialog dialog = builder.create();
-        dialog.show();
 
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+        saveButton.setOnClickListener(v -> {
             String name = input.getText().toString().trim();
             if (name.isEmpty()) {
                 input.setError("Please enter a name");
@@ -75,6 +74,8 @@ public class PresetFragment extends Fragment {
                 updatePresetSpinner();
             }
         });
+
+        dialog.show();
     }
 
     private void loadSelectedPreset() {

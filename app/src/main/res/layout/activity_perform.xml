@@ -136,17 +136,17 @@
     <!-- Piano View -->
     <com.convergencelabstfx.pianoview.PianoView
         android:id="@+id/pianoView"
-        android:layout_width="408dp"
-        android:layout_height="249dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:blackKeyColor="@color/black"
         app:enableMultiKeyHighlighting="true"
         app:keyCornerRadius="2dp"
         app:keyPressedColor="@color/primary_400"
         app:keyStrokeColor="@color/slate_500"
         app:keyStrokeWidth="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintHeight_percent="0.3"
         app:layout_constraintStart_toStartOf="parent"
         app:numberOfKeys="24"
         app:whiteKeyColor="@color/white" />
@@ -164,5 +164,16 @@
         android:textStyle="bold"
         android:elevation="8dp"
         app:layout_constraintBottom_toTopOf="@id/pianoView" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_900"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_navigation_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
