@@ -1,6 +1,7 @@
 package com.example.synthcontroller;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.InputType;
@@ -23,6 +24,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.convergencelabstfx.pianoview.PianoTouchListener;
 import com.convergencelabstfx.pianoview.PianoView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.rejowan.rotaryknob.RotaryKnob;
@@ -64,6 +66,12 @@ public class PerformActivity extends AppCompatActivity {
         Button panicButton = findViewById(R.id.panicButton);
         panicButton.setOnClickListener(v -> sendAllNotesOff());
 
+        Button settingsButton = findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        });
+
         // Initialize Bluetooth
         if (BluetoothManager.getInstance().connect()) {
             Toast.makeText(this, "Connected to synthesizer", Toast.LENGTH_SHORT).show();
@@ -75,6 +83,24 @@ public class PerformActivity extends AppCompatActivity {
 
         setupLandscapeControls();
         setupPresetControls();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.nav_perform);
+            bottomNavigationView.setOnItemSelectedListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_perform) {
+                    return true;
+                } else if (itemId == R.id.nav_midi) {
+                    startActivity(new Intent(this, MidiFilePlaybackActivity.class));
+                    return true;
+                } else if (itemId == R.id.nav_settings) {
+                    startActivity(new Intent(this, SettingsActivity.class));
+                    return true;
+                }
+                return false;
+            });
+        }
     }
 
     private void setupPresetControls() {
@@ -188,22 +214,20 @@ public class PerformActivity extends AppCompatActivity {
     private void showSavePresetDialog() {
         Log.d(TAG, "Showing save preset dialog");
 
-        // Use LayoutInflater to create a proper dialog view
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_save_preset, null);
         EditText input = dialogView.findViewById(R.id.presetNameInput);
 
+        // Hook up custom buttons from the layout
+        Button cancelButton = dialogView.findViewById(R.id.cancelButton);
+        Button saveButton = dialogView.findViewById(R.id.saveButton);
+
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Save Preset")
+                // Title is already in the custom layout, don’t add another one
                 .setView(dialogView)
-                .setPositiveButton("Save", null) // Set to null initially
-                .setNegativeButton("Cancel", (d, which) -> d.dismiss())
                 .create();
 
-        dialog.show();
-
-        // Set button click listeners after dialog is shown
-        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        positiveButton.setOnClickListener(v -> {
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+        saveButton.setOnClickListener(v -> {
             String presetName = input.getText().toString().trim();
             if (presetName.isEmpty()) {
                 input.setError("Please enter a name");
@@ -213,6 +237,8 @@ public class PerformActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
+        dialog.show();
     }
 
 
@@ -794,8 +820,8 @@ public class PerformActivity extends AppCompatActivity {
     }
 
     // Helper method to save spinner values
-    private void saveSpinnerValueIfExists(Bundle outState, int spinnerId, String key) {
-        Spinner spinner = findViewById(spinnerId);
+    private void saveSpinnerValueIfExists(Bundle outState, int id, String key) {
+        Spinner spinner = findViewById(id);
         if (spinner != null) {
             outState.putInt(key, spinner.getSelectedItemPosition());
         }
@@ -810,3 +836,4 @@ public class PerformActivity extends AppCompatActivity {
         }
     }
 }
+

@@ -1,22 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/slate_900"
+    android:padding="0dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter preset name:"
-        android:layout_marginBottom="8dp"/>
+        android:text="Save Preset"
+        android:textColor="@color/slate_50"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingTop="24dp"
+        android:paddingBottom="4dp" />
 
-    <EditText
-        android:id="@+id/presetNameInput"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="Preset name"
-        android:minHeight="48dp"/>
+        android:text="Enter a name for your new preset."
+        android:textColor="@color/slate_400"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:paddingBottom="24dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="24dp">
+
+        <ImageView
+            android:id="@+id/music_note_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:contentDescription="Music note"
+            android:src="@android:drawable/ic_media_play"
+            app:tint="@color/slate_400" />
+
+        <EditText
+            android:id="@+id/presetNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/rounded_edittext"
+            android:hint="Preset name"
+            android:inputType="text"
+            android:paddingStart="48dp"
+            android:paddingEnd="16dp"
+            android:textColor="@color/slate_50"
+            android:textColorHint="@color/slate_400" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:background="@color/slate_800_50"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp">
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginEnd="12dp"
+            android:backgroundTint="@color/slate_700"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/slate_50" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/primary_color"
+            android:text="Save"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
 
 </LinearLayout>

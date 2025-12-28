@@ -1,78 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/gray_900"
+    tools:context=".MidiFilePlaybackActivity">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/gray_900">
 
-        <Button
-            android:id="@+id/selectFileButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Select MIDI File" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/playButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Play"
-            android:layout_marginStart="8dp"
-            android:enabled="false" />
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@android:color/white" />
 
-        <Button
-            android:id="@+id/stopButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stop"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="MIDI Controller"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="8dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Preset:"
-            android:layout_marginEnd="8dp" />
-
-        <Spinner
-            android:id="@+id/presetSpinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:minHeight="48dp" />
-
-        <Button
-            android:id="@+id/loadPresetButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Load"
-            android:layout_marginStart="4dp"/>
-
-        <Button
-            android:id="@+id/savePresetButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:layout_marginStart="4dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@+id/bottom_navigation">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,274 +48,266 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- ADSR Controls -->
-            <TextView
+            <Button
+                android:id="@+id/selectFileButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ADSR Controls"
+                android:background="@drawable/rounded_gray_800_button"
+                android:drawableLeft="@drawable/ic_audio_file"
+                android:drawablePadding="8dp"
+                android:padding="16dp"
+                android:text="Select MIDI File"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
 
-                <LinearLayout
+                <Button
+                    android:id="@+id/playButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:background="@drawable/rounded_primary_600_button"
+                    android:drawableLeft="@drawable/ic_play_arrow"
+                    android:padding="12dp"
+                    android:text="Play"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="16dp"
+                    android:layout_height="0dp" />
+
+                <Button
+                    android:id="@+id/stopButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_gray_800_button"
+                    android:drawableLeft="@drawable/ic_stop"
+                    android:padding="12dp"
+                    android:text="Stop"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/rounded_gray_800_background"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Preset"
+                    android:textColor="@color/gray_300"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <ImageView
+                        android:id="@+id/prevPresetButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_chevron_left"
+                        app:tint="@color/gray_400" />
+
+                    <Spinner
+                        android:id="@+id/presetSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@null" />
+
+                    <ImageView
+                        android:id="@+id/nextPresetButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/gray_400" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/loadPresetButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_primary_600_button"
+                        android:text="Load"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="16dp"
+                        android:layout_height="0dp" />
+
+                    <Button
+                        android:id="@+id/savePresetButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_gray_700_button"
+                        android:text="Save"
+                        android:textAllCaps="false"
+                        android:textColor="@color/gray_300"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/rounded_gray_800_background"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="16dp"
+                    android:text="ADSR Envelope"
+                    android:textColor="@color/gray_300"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <com.rejowan.rotaryknob.RotaryKnob
                         android:id="@+id/attackKnob"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        app:indicator_color="#8062D6"
-                        app:show_label="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Attack"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                        android:layout_weight="1"
+                        app:knob_image="@drawable/navy_blue"
+                        app:label_text="Attack"
+                        app:label_text_color="@android:color/white"
+                        app:progress_text_color="@android:color/white"
+                        app:indicator_color="#FFFFFF"
+                        app:circle_color="#3C81E4"
+                        app:progress_filled_color="#1E88E5"
+                        app:progress_color="#FFFFFF"
+                        app:show_label="true"
+                        app:show_progress_text="true"
+                        app:progress_text_size="18sp"
+                        app:label_text_font="@font/inter"
+                        app:progress_text_font="@font/inter"
+                        app:max="255"
+                        app:min="0" />
 
                     <com.rejowan.rotaryknob.RotaryKnob
                         android:id="@+id/decayKnob"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        app:indicator_color="#8062D6"
-                        app:show_label="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Decay"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                        android:layout_weight="1"
+                        app:knob_image="@drawable/navy_blue"
+                        app:label_text="Decay"
+                        app:label_text_color="@android:color/white"
+                        app:progress_text_color="@android:color/white"
+                        app:indicator_color="#FFFFFF"
+                        app:circle_color="#3C81E4"
+                        app:progress_filled_color="#1E88E5"
+                        app:progress_color="#FFFFFF"
+                        app:show_label="true"
+                        app:progress_text_size="18sp"
+                        app:show_progress_text="true"
+                        app:label_text_font="@font/inter"
+                        app:progress_text_font="@font/inter"
+                        app:max="255"
+                        app:min="0" />
 
                     <com.rejowan.rotaryknob.RotaryKnob
                         android:id="@+id/sustainKnob"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        app:indicator_color="#8062D6"
-                        app:show_label="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Sustain"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                        android:layout_weight="1"
+                        app:knob_image="@drawable/navy_blue"
+                        app:label_text="Sustain"
+                        app:label_text_color="@android:color/white"
+                        app:progress_text_color="@android:color/white"
+                        app:indicator_color="#FFFFFF"
+                        app:circle_color="#3C81E4"
+                        app:progress_filled_color="#1E88E5"
+                        app:progress_color="#FFFFFF"
+                        app:progress_text_size="18sp"
+                        app:show_label="true"
+                        app:show_progress_text="true"
+                        app:label_text_font="@font/inter"
+                        app:progress_text_font="@font/inter"
+                        app:max="255"
+                        app:min="0" />
 
                     <com.rejowan.rotaryknob.RotaryKnob
                         android:id="@+id/releaseKnob"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        app:indicator_color="#8062D6"
-                        app:show_label="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Release"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Waveform Controls -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Waveform Controls"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Main Oscillator" />
-
-                    <Spinner
-                        android:id="@+id/mainWaveSpinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Sub Oscillator" />
-
-                    <Spinner
-                        android:id="@+id/subWaveSpinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Effects Controls -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Effects Controls"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <!-- First row of effects controls -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <com.rejowan.rotaryknob.RotaryKnob
-                        android:id="@+id/filterKnob"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        app:indicator_color="#8062D6"
-                        app:show_label="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Filter"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.rejowan.rotaryknob.RotaryKnob
-                        android:id="@+id/detuneKnob"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        app:indicator_color="#8062D6"
-                        app:show_label="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Detune"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Second row of effects controls -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <com.rejowan.rotaryknob.RotaryKnob
-                        android:id="@+id/vibRateKnob"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        app:indicator_color="#8062D6"
-                        app:show_label="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Vib Rate"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <com.rejowan.rotaryknob.RotaryKnob
-                        android:id="@+id/vibDepthKnob"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        app:indicator_color="#8062D6"
-                        app:show_label="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Vib Depth"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_weight="1"
+                        app:circle_color="#3C81E4"
+                        app:indicator_color="#FFFFFF"
+                        app:knob_image="@drawable/navy_blue"
+                        app:label_text="Release"
+                        app:label_text_color="@android:color/white"
+                        app:label_text_font="@font/inter"
+                        app:max="255"
+                        app:min="0"
+                        app:progress_color="#FFFFFF"
+                        app:progress_text_size="18sp"
+                        app:progress_filled_color="#1E88E5"
+                        app:progress_text_color="@android:color/white"
+                        app:progress_text_font="@font/inter"
+                        app:show_label="true"
+                        app:show_progress_text="true" />
                 </LinearLayout>
 
             </LinearLayout>
+
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
-</LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_900"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:menu="@menu/bottom_navigation_menu" />
+
+</RelativeLayout>

@@ -79,9 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Add a click listener for the settings card
         settingsCard.setOnClickListener(v -> {
-            // Handle settings click here, e.g., start a new activity
-            // Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            // startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
         });
 
         checkAndRequestPermissions();
