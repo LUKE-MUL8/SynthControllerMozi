@@ -18,7 +18,7 @@
         app:progress_text_color="@android:color/white"
         app:suffix_text_color="@android:color/white"
         app:indicator_color="#FFFFFF"
-        app:indicator_size="8dp"
+        app:indicator_size="5dp"
         app:circle_color="#3C81E4"
         app:progress_filled_color="#1E88E5"
         app:progress_color="#FFFFFF"

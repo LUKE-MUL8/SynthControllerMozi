@@ -36,269 +36,415 @@
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/contentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:layout_above="@+id/bottom_navigation">
+        android:layout_above="@+id/bottom_navigation"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/selectFileButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_gray_800_button"
+            android:drawableLeft="@drawable/ic_audio_file"
+            android:drawablePadding="8dp"
+            android:padding="12dp"
+            android:text="Select MIDI File"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
 
             <Button
-                android:id="@+id/selectFileButton"
-                android:layout_width="match_parent"
+                android:id="@+id/playButton"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_gray_800_button"
-                android:drawableLeft="@drawable/ic_audio_file"
-                android:drawablePadding="8dp"
-                android:padding="16dp"
-                android:text="Select MIDI File"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_primary_600_button"
+                android:drawableLeft="@drawable/ic_play_arrow"
+                android:padding="12dp"
+                android:text="Play"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <View
+                android:layout_width="8dp"
+                android:layout_height="0dp" />
+
+            <Button
+                android:id="@+id/stopButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_gray_800_button"
+                android:drawableLeft="@drawable/ic_stop"
+                android:padding="12dp"
+                android:text="Stop"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_gray_800_background"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Preset"
+                android:textColor="@color/gray_300"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:id="@+id/prevPresetButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_chevron_left"
+                    app:tint="@color/gray_400" />
+
+                <Spinner
+                    android:id="@+id/presetSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@null" />
+
+                <ImageView
+                    android:id="@+id/nextPresetButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/gray_400" />
+            </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/playButton"
+                    android:id="@+id/loadPresetButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_primary_600_button"
-                    android:drawableLeft="@drawable/ic_play_arrow"
-                    android:padding="12dp"
-                    android:text="Play"
+                    android:text="Load"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp" />
 
                 <View
-                    android:layout_width="16dp"
+                    android:layout_width="8dp"
                     android:layout_height="0dp" />
 
                 <Button
-                    android:id="@+id/stopButton"
+                    android:id="@+id/savePresetButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_gray_800_button"
-                    android:drawableLeft="@drawable/ic_stop"
-                    android:padding="12dp"
-                    android:text="Stop"
+                    android:background="@drawable/rounded_gray_700_button"
+                    android:text="Save"
                     android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/rounded_gray_800_background"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Preset"
                     android:textColor="@color/gray_300"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp">
-
-                    <ImageView
-                        android:id="@+id/prevPresetButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_chevron_left"
-                        app:tint="@color/gray_400" />
-
-                    <Spinner
-                        android:id="@+id/presetSpinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@null" />
-
-                    <ImageView
-                        android:id="@+id/nextPresetButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/gray_400" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/loadPresetButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/rounded_primary_600_button"
-                        android:text="Load"
-                        android:textAllCaps="false"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp" />
-
-                    <View
-                        android:layout_width="16dp"
-                        android:layout_height="0dp" />
-
-                    <Button
-                        android:id="@+id/savePresetButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/rounded_gray_700_button"
-                        android:text="Save"
-                        android:textAllCaps="false"
-                        android:textColor="@color/gray_300"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/rounded_gray_800_background"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="16dp"
-                    android:text="ADSR Envelope"
-                    android:textColor="@color/gray_300"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.rejowan.rotaryknob.RotaryKnob
-                        android:id="@+id/attackKnob"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:knob_image="@drawable/navy_blue"
-                        app:label_text="Attack"
-                        app:label_text_color="@android:color/white"
-                        app:progress_text_color="@android:color/white"
-                        app:indicator_color="#FFFFFF"
-                        app:circle_color="#3C81E4"
-                        app:progress_filled_color="#1E88E5"
-                        app:progress_color="#FFFFFF"
-                        app:show_label="true"
-                        app:show_progress_text="true"
-                        app:progress_text_size="18sp"
-                        app:label_text_font="@font/inter"
-                        app:progress_text_font="@font/inter"
-                        app:max="255"
-                        app:min="0" />
-
-                    <com.rejowan.rotaryknob.RotaryKnob
-                        android:id="@+id/decayKnob"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:knob_image="@drawable/navy_blue"
-                        app:label_text="Decay"
-                        app:label_text_color="@android:color/white"
-                        app:progress_text_color="@android:color/white"
-                        app:indicator_color="#FFFFFF"
-                        app:circle_color="#3C81E4"
-                        app:progress_filled_color="#1E88E5"
-                        app:progress_color="#FFFFFF"
-                        app:show_label="true"
-                        app:progress_text_size="18sp"
-                        app:show_progress_text="true"
-                        app:label_text_font="@font/inter"
-                        app:progress_text_font="@font/inter"
-                        app:max="255"
-                        app:min="0" />
-
-                    <com.rejowan.rotaryknob.RotaryKnob
-                        android:id="@+id/sustainKnob"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:knob_image="@drawable/navy_blue"
-                        app:label_text="Sustain"
-                        app:label_text_color="@android:color/white"
-                        app:progress_text_color="@android:color/white"
-                        app:indicator_color="#FFFFFF"
-                        app:circle_color="#3C81E4"
-                        app:progress_filled_color="#1E88E5"
-                        app:progress_color="#FFFFFF"
-                        app:progress_text_size="18sp"
-                        app:show_label="true"
-                        app:show_progress_text="true"
-                        app:label_text_font="@font/inter"
-                        app:progress_text_font="@font/inter"
-                        app:max="255"
-                        app:min="0" />
-
-                    <com.rejowan.rotaryknob.RotaryKnob
-                        android:id="@+id/releaseKnob"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:circle_color="#3C81E4"
-                        app:indicator_color="#FFFFFF"
-                        app:knob_image="@drawable/navy_blue"
-                        app:label_text="Release"
-                        app:label_text_color="@android:color/white"
-                        app:label_text_font="@font/inter"
-                        app:max="255"
-                        app:min="0"
-                        app:progress_color="#FFFFFF"
-                        app:progress_text_size="18sp"
-                        app:progress_filled_color="#1E88E5"
-                        app:progress_text_color="@android:color/white"
-                        app:progress_text_font="@font/inter"
-                        app:show_label="true"
-                        app:show_progress_text="true" />
-                </LinearLayout>
-
+                    android:textSize="16sp" />
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_gray_800_background"
+            android:columnCount="4"
+            android:rowCount="2"
+            android:padding="8dp">
+
+            <com.rejowan.rotaryknob.RotaryKnob
+                android:id="@+id/attackKnob"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:knob_image="@drawable/navy_blue"
+                app:label_text="Attack"
+                app:label_text_color="@android:color/white"
+                app:progress_text_color="@android:color/white"
+                app:indicator_color="#FFFFFF"
+                app:circle_color="#3C81E4"
+                app:progress_filled_color="#1E88E5"
+                app:progress_color="#FFFFFF"
+                app:show_label="true"
+                app:show_progress_text="true"
+                app:progress_text_size="14sp"
+                app:label_text_size="12sp"
+                app:label_text_font="@font/inter"
+                app:progress_text_font="@font/inter"
+                app:max="255"
+                app:min="0"
+                app:indicator_size="5dp"
+                app:border_color="#74FF00"
+                app:border_width="20dp"
+                app:show_big_progress="true"
+                app:big_progress_multiplier="3.0"
+                app:big_progress_diff="1"
+                app:suffix_text_color="@android:color/white"
+                app:suffix_text_font="@font/inter"/>
+
+            <com.rejowan.rotaryknob.RotaryKnob
+                android:id="@+id/decayKnob"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:knob_image="@drawable/navy_blue"
+                app:label_text="Decay"
+                app:label_text_color="@android:color/white"
+                app:progress_text_color="@android:color/white"
+                app:indicator_color="#FFFFFF"
+                app:circle_color="#3C81E4"
+                app:progress_filled_color="#1E88E5"
+                app:progress_color="#FFFFFF"
+                app:show_label="true"
+                app:progress_text_size="14sp"
+                app:label_text_size="12sp"
+                app:show_progress_text="true"
+                app:label_text_font="@font/inter"
+                app:progress_text_font="@font/inter"
+                app:max="255"
+                app:min="0"
+                app:indicator_size="5dp"
+                app:border_color="#74FF00"
+                app:border_width="20dp"
+                app:show_big_progress="true"
+                app:big_progress_multiplier="3.0"
+                app:big_progress_diff="1"
+                app:suffix_text_color="@android:color/white"
+                app:suffix_text_font="@font/inter"/>
+
+            <com.rejowan.rotaryknob.RotaryKnob
+                android:id="@+id/sustainKnob"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:knob_image="@drawable/navy_blue"
+                app:label_text="Sustain"
+                app:label_text_color="@android:color/white"
+                app:progress_text_color="@android:color/white"
+                app:indicator_color="#FFFFFF"
+                app:circle_color="#3C81E4"
+                app:progress_filled_color="#1E88E5"
+                app:progress_color="#FFFFFF"
+                app:progress_text_size="14sp"
+                app:label_text_size="12sp"
+                app:show_label="true"
+                app:show_progress_text="true"
+                app:label_text_font="@font/inter"
+                app:progress_text_font="@font/inter"
+                app:max="255"
+                app:min="0"
+                app:indicator_size="5dp"
+                app:border_color="#74FF00"
+                app:border_width="20dp"
+                app:show_big_progress="true"
+                app:big_progress_multiplier="3.0"
+                app:big_progress_diff="1"
+                app:suffix_text_color="@android:color/white"
+                app:suffix_text_font="@font/inter"/>
+
+            <com.rejowan.rotaryknob.RotaryKnob
+                android:id="@+id/releaseKnob"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:circle_color="#3C81E4"
+                app:indicator_color="#FFFFFF"
+                app:knob_image="@drawable/navy_blue"
+                app:label_text="Release"
+                app:label_text_color="@android:color/white"
+                app:label_text_font="@font/inter"
+                app:max="255"
+                app:min="0"
+                app:progress_color="#FFFFFF"
+                app:progress_text_size="14sp"
+                app:label_text_size="12sp"
+                app:progress_filled_color="#1E88E5"
+                app:progress_text_color="@android:color/white"
+                app:progress_text_font="@font/inter"
+                app:show_label="true"
+                app:show_progress_text="true"
+                app:indicator_size="5dp"
+                app:border_color="#74FF00"
+                app:border_width="20dp"
+                app:show_big_progress="true"
+                app:big_progress_multiplier="3.0"
+                app:big_progress_diff="1"
+                app:suffix_text_color="@android:color/white"
+                app:suffix_text_font="@font/inter"/>
+
+            <com.rejowan.rotaryknob.RotaryKnob
+                android:id="@+id/filterKnob"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:knob_image="@drawable/navy_blue"
+                app:label_text="Filter"
+                app:label_text_color="@android:color/white"
+                app:progress_text_color="@android:color/white"
+                app:indicator_color="#FFFFFF"
+                app:circle_color="#3C81E4"
+                app:progress_filled_color="#1E88E5"
+                app:progress_color="#FFFFFF"
+                app:show_label="true"
+                app:show_progress_text="true"
+                app:progress_text_size="14sp"
+                app:label_text_size="12sp"
+                app:label_text_font="@font/inter"
+                app:progress_text_font="@font/inter"
+                app:max="255"
+                app:min="0"
+                app:indicator_size="5dp"
+                app:border_color="#74FF00"
+                app:border_width="20dp"
+                app:show_big_progress="true"
+                app:big_progress_multiplier="3.0"
+                app:big_progress_diff="1"
+                app:suffix_text_color="@android:color/white"
+                app:suffix_text_font="@font/inter"/>
+
+            <com.rejowan.rotaryknob.RotaryKnob
+                android:id="@+id/detuneKnob"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:knob_image="@drawable/navy_blue"
+                app:label_text="Detune"
+                app:label_text_color="@android:color/white"
+                app:progress_text_color="@android:color/white"
+                app:indicator_color="#FFFFFF"
+                app:circle_color="#3C81E4"
+                app:progress_filled_color="#1E88E5"
+                app:progress_color="#FFFFFF"
+                app:show_label="true"
+                app:progress_text_size="14sp"
+                app:label_text_size="12sp"
+                app:show_progress_text="true"
+                app:label_text_font="@font/inter"
+                app:progress_text_font="@font/inter"
+                app:max="255"
+                app:min="0"
+                app:indicator_size="5dp"
+                app:border_color="#74FF00"
+                app:border_width="20dp"
+                app:show_big_progress="true"
+                app:big_progress_multiplier="3.0"
+                app:big_progress_diff="1"
+                app:suffix_text_color="@android:color/white"
+                app:suffix_text_font="@font/inter"/>
+
+            <com.rejowan.rotaryknob.RotaryKnob
+                android:id="@+id/vibRateKnob"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:big_progress_diff="1"
+                app:big_progress_multiplier="3.0"
+                app:border_color="#74FF00"
+                app:border_width="20dp"
+                app:circle_color="#3C81E4"
+                app:indicator_color="#FFFFFF"
+                app:indicator_size="5dp"
+                app:knob_image="@drawable/navy_blue"
+                app:label_text="Vib Rate"
+                app:label_text_color="@android:color/white"
+                app:label_text_font="@font/inter"
+                app:max="255"
+                app:min="0"
+                app:progress_color="#FFFFFF"
+                app:progress_filled_color="#1E88E5"
+                app:progress_text_color="@android:color/white"
+                app:progress_text_font="@font/inter"
+                app:progress_text_size="14sp"
+                app:label_text_size="12sp"
+                app:show_big_progress="true"
+                app:show_label="true"
+                app:show_progress_text="true"
+                app:suffix_text_color="@android:color/white"
+                app:suffix_text_font="@font/inter" />
+
+            <com.rejowan.rotaryknob.RotaryKnob
+                android:id="@+id/vibDepthKnob"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:knob_image="@drawable/navy_blue"
+                app:label_text="Vib Depth"
+                app:label_text_color="@android:color/white"
+                app:progress_text_color="@android:color/white"
+                app:indicator_color="#FFFFFF"
+                app:circle_color="#3C81E4"
+                app:progress_filled_color="#1E88E5"
+                app:progress_color="#FFFFFF"
+                app:show_label="true"
+                app:progress_text_size="14sp"
+                app:label_text_size="12sp"
+                app:show_progress_text="true"
+                app:label_text_font="@font/inter"
+                app:progress_text_font="@font/inter"
+                app:max="255"
+                app:min="0"
+                app:indicator_size="5dp"
+                app:border_color="#74FF00"
+                app:border_width="20dp"
+                app:show_big_progress="true"
+                app:big_progress_multiplier="3.0"
+                app:big_progress_diff="1"
+                app:suffix_text_color="@android:color/white"
+                app:suffix_text_font="@font/inter"/>
+
+        </GridLayout>
+
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
