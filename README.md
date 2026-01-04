@@ -1,6 +1,6 @@
 **Sound Synthesis with ESP32 and Mozzi Library.**
 
-![play_store_512](https://github.com/user-attachments/assets/43109a78-5093-42fa-8bc2-35925024911d)
+<img width="512" height="512" alt="play_store_512" src="https://github.com/user-attachments/assets/197c734e-c260-4d18-adcd-c3ebbff83525" />
 
 
 
@@ -23,7 +23,13 @@ Bluetooth input adjusts the modulation index in real time.
 MIDI notes change automatically, producing dynamic tonal shifts. It can play midi song files.
 
 
-![image](https://github.com/user-attachments/assets/04e6ab47-1b28-4d05-b885-b9f7f13bf4c8)
+<img width="1316" height="2560" alt="Screenshot_20260104_154933" src="https://github.com/user-attachments/assets/b697ea25-1667-42da-9dde-8710ea5fa2af" />
+<img width="2560" height="1316" alt="image" src="https://github.com/user-attachments/assets/5767ac94-30d7-4aaa-8db0-1fc28405f560" />
+
+<img width="1316" height="2560" alt="image" src="https://github.com/user-attachments/assets/c2e9214a-59f8-4c0d-b73b-987fa457d239" />
+
+
+
 
 
 
