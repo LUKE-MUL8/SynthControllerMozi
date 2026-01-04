@@ -67,10 +67,12 @@ public class PerformActivity extends AppCompatActivity {
         panicButton.setOnClickListener(v -> sendAllNotesOff());
 
         Button settingsButton = findViewById(R.id.settingsButton);
-        settingsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-        });
+        if (settingsButton != null) {
+            settingsButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+            });
+        }
 
         // Initialize Bluetooth
         if (BluetoothManager.getInstance().connect()) {
@@ -170,23 +172,10 @@ public class PerformActivity extends AppCompatActivity {
         }
     }
 
-    private void adjustPianoSizeBasedOnOrientation() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            pianoView.setNumberOfKeys(36);
-        } else {
-            pianoView.setNumberOfKeys(24);
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        adjustPianoSizeBasedOnOrientation();
-    }
-
     private void updateOctaveDisplay(int octave) {
-        TextView octaveTextView = findViewById(R.id.octaveTextView);
-        octaveTextView.setText(String.valueOf(octave)); // Convert integer to string
+        if (octaveTextView != null) {
+            octaveTextView.setText(String.valueOf(octave)); // Convert integer to string
+        }
     }
 
     private void changeOctave(int delta) {
@@ -337,12 +326,10 @@ public class PerformActivity extends AppCompatActivity {
             TabLayout tabLayout = findViewById(R.id.tabLayout);
             ViewPager2 viewPager = findViewById(R.id.viewPager);
 
-            if (tabLayout != null && viewPager != null) {
+            if (tabLayout != null && viewPager != null && viewPager.getAdapter() != null) {
                 SynthPagerAdapter adapter = (SynthPagerAdapter) viewPager.getAdapter();
-                if (adapter != null) {
-                    return (WaveformFragment) getSupportFragmentManager()
-                            .findFragmentByTag("f" + adapter.getItemId(1));  // Changed from 3 to 1
-                }
+                return (WaveformFragment) getSupportFragmentManager()
+                        .findFragmentByTag("f" + adapter.getItemId(1));  // Changed from 3 to 1
             }
         }
         return null;
@@ -353,12 +340,10 @@ public class PerformActivity extends AppCompatActivity {
             TabLayout tabLayout = findViewById(R.id.tabLayout);
             ViewPager2 viewPager = findViewById(R.id.viewPager);
 
-            if (tabLayout != null && viewPager != null) {
+            if (tabLayout != null && viewPager != null && viewPager.getAdapter() != null) {
                 SynthPagerAdapter adapter = (SynthPagerAdapter) viewPager.getAdapter();
-                if (adapter != null) {
-                    return (AdsrFragment) getSupportFragmentManager()
-                            .findFragmentByTag("f" + adapter.getItemId(2));  // Changed from 0 to 2
-                }
+                return (AdsrFragment) getSupportFragmentManager()
+                        .findFragmentByTag("f" + adapter.getItemId(2));  // Changed from 0 to 2
             }
         }
         return null;
@@ -369,12 +354,10 @@ public class PerformActivity extends AppCompatActivity {
             TabLayout tabLayout = findViewById(R.id.tabLayout);
             ViewPager2 viewPager = findViewById(R.id.viewPager);
 
-            if (tabLayout != null && viewPager != null) {
+            if (tabLayout != null && viewPager != null && viewPager.getAdapter() != null) {
                 SynthPagerAdapter adapter = (SynthPagerAdapter) viewPager.getAdapter();
-                if (adapter != null) {
-                    return (EffectsFragment) getSupportFragmentManager()
-                            .findFragmentByTag("f" + adapter.getItemId(3));  // Changed from 1 to 3
-                }
+                return (EffectsFragment) getSupportFragmentManager()
+                        .findFragmentByTag("f" + adapter.getItemId(3));  // Changed from 1 to 3
             }
         }
         return null;
@@ -836,4 +819,3 @@ public class PerformActivity extends AppCompatActivity {
         }
     }
 }
-

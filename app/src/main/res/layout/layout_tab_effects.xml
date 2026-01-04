@@ -28,7 +28,15 @@
         app:label_text_font="@font/inter"
         app:progress_text_font="@font/inter"
         app:max="255"
-        app:min="0" />
+        app:min="0"
+        app:indicator_size="5dp"
+        app:border_color="#74FF00"
+        app:border_width="20dp"
+        app:show_big_progress="true"
+        app:big_progress_multiplier="3.0"
+        app:big_progress_diff="1"
+        app:suffix_text_color="@android:color/white"
+        app:suffix_text_font="@font/inter"/>
 
     <com.rejowan.rotaryknob.RotaryKnob
         android:id="@+id/detuneKnob"
@@ -49,7 +57,15 @@
         app:label_text_font="@font/inter"
         app:progress_text_font="@font/inter"
         app:max="255"
-        app:min="0" />
+        app:min="0"
+        app:indicator_size="5dp"
+        app:border_color="#74FF00"
+        app:border_width="20dp"
+        app:show_big_progress="true"
+        app:big_progress_multiplier="3.0"
+        app:big_progress_diff="1"
+        app:suffix_text_color="@android:color/white"
+        app:suffix_text_font="@font/inter"/>
 
     <com.rejowan.rotaryknob.RotaryKnob
         android:id="@+id/vibRateKnob"
@@ -70,7 +86,15 @@
         app:label_text_font="@font/inter"
         app:progress_text_font="@font/inter"
         app:max="255"
-        app:min="0" />
+        app:min="0"
+        app:indicator_size="5dp"
+        app:border_color="#74FF00"
+        app:border_width="20dp"
+        app:show_big_progress="true"
+        app:big_progress_multiplier="3.0"
+        app:big_progress_diff="1"
+        app:suffix_text_color="@android:color/white"
+        app:suffix_text_font="@font/inter"/>
 
     <com.rejowan.rotaryknob.RotaryKnob
         android:id="@+id/vibDepthKnob"
@@ -91,6 +115,14 @@
         app:label_text_font="@font/inter"
         app:progress_text_font="@font/inter"
         app:max="255"
-        app:min="0" />
+        app:min="0"
+        app:indicator_size="5dp"
+        app:border_color="#74FF00"
+        app:border_width="20dp"
+        app:show_big_progress="true"
+        app:big_progress_multiplier="3.0"
+        app:big_progress_diff="1"
+        app:suffix_text_color="@android:color/white"
+        app:suffix_text_font="@font/inter"/>
 
 </LinearLayout>

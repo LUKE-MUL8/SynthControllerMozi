@@ -20,4 +20,32 @@
     </style>
 
     <style name="Theme.SynthController" parent="Base.Theme.SynthController" />
+
+    <style name="RotaryKnobStyle">
+        <item name="knob_image">@drawable/navy_blue</item>
+        <item name="label_text_color">@android:color/white</item>
+        <item name="progress_text_color">@android:color/white</item>
+        <item name="suffix_text_color">@android:color/white</item>
+        <item name="indicator_color">#FFFFFF</item>
+        <item name="indicator_size">5dp</item>
+        <item name="circle_color">#3C81E4</item>
+        <item name="progress_filled_color">#1E88E5</item>
+        <item name="progress_color">#FFFFFF</item>
+        <item name="border_color">#74FF00</item>
+        <item name="border_width">20dp</item>
+        <item name="show_big_progress">true</item>
+        <item name="big_progress_multiplier">3.0</item>
+        <item name="big_progress_diff">1</item>
+        <item name="show_label">true</item>
+        <item name="show_progress_text">true</item>
+        <item name="progress_text_size">14sp</item>
+        <item name="label_text_size">12sp</item>
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="max">255</item>
+        <item name="min">0</item>
+        <item name="label_text_font">@font/inter</item>
+        <item name="progress_text_font">@font/inter</item>
+        <item name="suffix_text_font">@font/inter</item>
+    </style>
 </resources>
