@@ -181,6 +181,10 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
         sendCommand("DECAY:", preset.getDecay());
         sendCommand("SUSTAIN:", preset.getSustain());
         sendCommand("RELEASE:", preset.getRelease());
+        sendCommand("FILTER:", preset.getFilter());
+        sendCommand("DETUNE:", preset.getDetune());
+        sendCommand("VIB_RATE:", preset.getVibRate());
+        sendCommand("VIB_DEPTH:", preset.getVibDepth());
 
         updateUIFromPreset(preset);
 
@@ -192,6 +196,10 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
         updateKnobIfExists(R.id.decayKnob, preset.getDecay());
         updateKnobIfExists(R.id.sustainKnob, preset.getSustain());
         updateKnobIfExists(R.id.releaseKnob, preset.getRelease());
+        updateKnobIfExists(R.id.filterKnob, preset.getFilter());
+        updateKnobIfExists(R.id.detuneKnob, preset.getDetune());
+        updateKnobIfExists(R.id.vibRateKnob, preset.getVibRate());
+        updateKnobIfExists(R.id.vibDepthKnob, preset.getVibDepth());
     }
 
     private void updateKnobIfExists(int id, int value) {
@@ -233,6 +241,10 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
         preset.setDecay(getKnobValue(R.id.decayKnob));
         preset.setSustain(getKnobValue(R.id.sustainKnob));
         preset.setRelease(getKnobValue(R.id.releaseKnob));
+        preset.setFilter(getKnobValue(R.id.filterKnob));
+        preset.setDetune(getKnobValue(R.id.detuneKnob));
+        preset.setVibRate(getKnobValue(R.id.vibRateKnob));
+        preset.setVibDepth(getKnobValue(R.id.vibDepthKnob));
 
         presetManager.savePreset(preset);
 
@@ -248,40 +260,30 @@ public class MidiFilePlaybackActivity extends AppCompatActivity {
 
     private void setupSynthControls() {
         setupAdsrControls();
+        setupEffectsControls();
     }
 
     private void setupAdsrControls() {
-        RotaryKnob attackKnob = findViewById(R.id.attackKnob);
-        RotaryKnob decayKnob = findViewById(R.id.decayKnob);
-        RotaryKnob sustainKnob = findViewById(R.id.sustainKnob);
-        RotaryKnob releaseKnob = findViewById(R.id.releaseKnob);
+        setupKnob(R.id.attackKnob, "ATTACK:", 0);
+        setupKnob(R.id.decayKnob, "DECAY:", 255);
+        setupKnob(R.id.sustainKnob, "SUSTAIN:", 0);
+        setupKnob(R.id.releaseKnob, "RELEASE:", 0);
+    }
 
-        if (attackKnob != null) {
-            attackKnob.setMin(0);
-            attackKnob.setMax(255);
-            attackKnob.setCurrentProgress(0);
-            attackKnob.setProgressChangeListener(progress -> sendCommand("ATTACK:", progress));
-        }
+    private void setupEffectsControls() {
+        setupKnob(R.id.filterKnob, "FILTER:", 255);
+        setupKnob(R.id.detuneKnob, "DETUNE:", 0);
+        setupKnob(R.id.vibRateKnob, "VIB_RATE:", 0);
+        setupKnob(R.id.vibDepthKnob, "VIB_DEPTH:", 0);
+    }
 
-        if (decayKnob != null) {
-            decayKnob.setMin(0);
-            decayKnob.setMax(255);
-            decayKnob.setCurrentProgress(255);
-            decayKnob.setProgressChangeListener(progress -> sendCommand("DECAY:", progress));
-        }
-
-        if (sustainKnob != null) {
-            sustainKnob.setMin(0);
-            sustainKnob.setMax(255);
-            sustainKnob.setCurrentProgress(0);
-            sustainKnob.setProgressChangeListener(progress -> sendCommand("SUSTAIN:", progress));
-        }
-
-        if (releaseKnob != null) {
-            releaseKnob.setMin(0);
-            releaseKnob.setMax(255);
-            releaseKnob.setCurrentProgress(0);
-            releaseKnob.setProgressChangeListener(progress -> sendCommand("RELEASE:", progress));
+    private void setupKnob(int id, String commandPrefix, int defaultValue) {
+        RotaryKnob knob = findViewById(id);
+        if (knob != null) {
+            knob.setMin(0);
+            knob.setMax(255);
+            knob.setCurrentProgress(defaultValue);
+            knob.setProgressChangeListener(progress -> sendCommand(commandPrefix, progress));
         }
     }
 
